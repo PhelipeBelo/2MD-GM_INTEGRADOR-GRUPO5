@@ -1,66 +1,67 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Navbar from "@/components/blocks/Navbar";
+import Card from "@/components/Card";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      {/* Login 1 - Bootstrap Brain Component */}
+      <div className="bg-light py-3 py-md-5">
+        <div className="container">
+          <div className="row justify-content-md-center">
+            <div className="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+              <div className="bg-white p-4 p-md-5 rounded shadow-sm">
+                <div className="row">
+                  <div className="col-12">
+                    <div className="text-center mb-5">
+                      <a href="#!">
+                        <img
+                          src="img/iconGm.png"
+                          alt="BootstrapBrain Logo"
+                          width={175}
+                          height={57}
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <form action="#!">
+                  <div className="row gy-3 gy-md-4 overflow-hidden">
+                  <div className="col-12">
+                      <div className="d-grid">
+                        <button className="btn btn-primary btn-lg" type="submit">
+                          Login para GL
+                        </button>
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="d-grid">
+                        <button className="btn btn-primary btn-lg" type="submit">
+                          Login para a tenda
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <div className="row">
+                  <div className="col-12">
+                    <hr className="mt-5 mb-4 border-secondary-subtle" />
+                    <div className="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-center">
+                      <a href="#!" className="link-secondary text-decoration-none">
+                        Create new account
+                      </a>
+                      <a href="#!" className="link-secondary text-decoration-none">
+                        Forgot password
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 }
