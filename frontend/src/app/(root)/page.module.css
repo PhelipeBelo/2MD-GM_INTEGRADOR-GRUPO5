@@ -1,5 +1,5 @@
 :root {
-  --brand-blue: #007bff;
+  --brand-blue: #0e5a91;
   --foreground: #fff;
 }
 
@@ -18,6 +18,7 @@ body, html {
   min-height: 100vh;
   overflow: hidden;
   background-color: var(--foreground);
+
 }
 
 /* Parte de baixo */
@@ -35,8 +36,15 @@ body, html {
 }
 
 .formPanelRight {
-  background-color: var(--brand-blue);
+  
+  background-color: var(--brand-blue); 
   z-index: 1;
+  
+background-image: url('/img/fundo_claro.png');
+  
+ background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Overlay (andar de cima) */
@@ -70,14 +78,15 @@ body, html {
   width: 50%;
   height: 100%;
   background-color: #fff;
-  background-image: url('/img/entrada2.png');
+  background-image: url('/img/fundo.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 /* Quando ativa a transição */
-.reveal .overlayContainer {
+/* <-- MUDANÇA 2: Corrigido o seletor (estava faltando .loginContainer) */
+.loginContainer.reveal .overlayContainer {
   transform: translateX(100%);
 }
 
@@ -85,10 +94,10 @@ body, html {
 .carWrapper {
   position: absolute;
   z-index: 11;
-  left: 45%;
-  top: 50%;
+  left: 50%;
+  top: 53%;
   transform: translate(-50%, -50%);
-  width: 350px;
+  width: 300px;
   transition: transform 0.7s ease-in, opacity 0.6s ease-in;
 }
 
@@ -98,7 +107,13 @@ body, html {
 }
 
 /* Efeito do carro ao sair */
-.reveal .carWrapper {
-  transform: translate3d(450px, -50%, 0) scale(0.1) rotateY(-25deg);
+/* <-- MUDANÇA 3: Corrigido o seletor e a animação */
+.loginContainer.reveal .carWrapper {
+  /*
+    Move 200px para a direita (direção da fábrica)
+    Move -600px para "frente" (eixo Z, para longe)
+    Gira um pouco para dar realismo
+  */
+  transform: translate3d(200px, -50%, -600px) scale(0.1) rotateY(15deg);
   opacity: 0;
 }
