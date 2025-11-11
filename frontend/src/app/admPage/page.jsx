@@ -132,9 +132,10 @@ export default function Page() {
 
             {/* ===== MENU DROPDOWN ===== */}
             <ul
-              className="dropdown-menu margem_menu shadow-sm border-0 p-2 start-50 translate-middle-x"
-              aria-labelledby="userMenu"
-            >
+            className="dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu"
+            aria-labelledby="userMenu"
+
+          >
               <li>
                 <h6 className="dropdown-header text-muted">Perfil</h6>
               </li>
@@ -167,10 +168,10 @@ export default function Page() {
               </li>
             </ul>
           </div>
-          </div>
+        </div>
 
-          {/* ===== ANIMAÇÃO CSS ===== */}
-          <style jsx>{`
+        {/* ===== ANIMAÇÃO CSS ===== */}
+        <style jsx>{`
         @keyframes pulse {
           0% {
             transform: scale(1);
