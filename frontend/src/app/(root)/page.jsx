@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import styles from './page.module.css'; // CSS Module
+import styles from './page.module.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function LoginPage() {
@@ -16,14 +16,12 @@ export default function LoginPage() {
         setIsOverlayVisible(true);
     };
 
-    // Corrigido: usar loginContainer
+    
     const containerClasses = `${styles.loginContainer} ${!isOverlayVisible ? styles.reveal : ''}`;
 
     return (
         <main className={containerClasses}>
-            {/* --- ANDAR DE BAIXO (Estado 2: Revelado) --- */}
-            
-            {/* Painel Esquerdo: Formulário (Fundo Branco) */}
+
             <div className={styles.formPanelLeft}>
                 <form className="p-5 text-center">
                     <h1 className="fw-bold mb-3">Faça o login</h1>
@@ -42,10 +40,9 @@ export default function LoginPage() {
                 </form>
             </div>
 
-            {/* Painel Azul (permanece no fundo) */}
             <div className={styles.formPanelRight}></div>
 
-            {/* --- ANDAR DE CIMA (Estado 1: O Slider) --- */}
+          
             <div className={styles.overlayContainer}>
                 <div className={styles.overlayPanelLeft}>
                     <h1 className="fw-bold">Bem Vindo de Volta!</h1>
@@ -59,10 +56,10 @@ export default function LoginPage() {
                 <div className={styles.overlayPanelRight}></div>
             </div>
 
-            {/* --- O CARRO (Elemento Flutuante) --- */}
+        
             <div className={styles.carWrapper}>
                 <Image 
-                    src="/img/carro.png"
+                    src="/img/carro2.png"
                     alt="Carro" 
                     width={350} 
                     height={175}

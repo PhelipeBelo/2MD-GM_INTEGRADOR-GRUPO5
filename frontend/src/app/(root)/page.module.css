@@ -40,7 +40,7 @@ body, html {
   background-color: var(--brand-blue); 
   z-index: 1;
   
-background-image: url('/img/fundo_claro.png');
+background-image: url('/img/portao.png');
   
  background-size: contain;
   background-position: center;
@@ -84,13 +84,12 @@ background-image: url('/img/fundo_claro.png');
   background-repeat: no-repeat;
 }
 
-/* Quando ativa a transição */
-/* <-- MUDANÇA 2: Corrigido o seletor (estava faltando .loginContainer) */
+
 .loginContainer.reveal .overlayContainer {
   transform: translateX(100%);
 }
 
-/* Carro */
+
 .carWrapper {
   position: absolute;
   z-index: 11;
@@ -106,14 +105,8 @@ background-image: url('/img/fundo_claro.png');
   height: auto;
 }
 
-/* Efeito do carro ao sair */
-/* <-- MUDANÇA 3: Corrigido o seletor e a animação */
+
 .loginContainer.reveal .carWrapper {
-  /*
-    Move 200px para a direita (direção da fábrica)
-    Move -600px para "frente" (eixo Z, para longe)
-    Gira um pouco para dar realismo
-  */
   transform: translate3d(200px, -50%, -600px) scale(0.1) rotateY(15deg);
   opacity: 0;
 }
