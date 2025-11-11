@@ -474,3 +474,31 @@
 .margem_menu{
   margin-top: 30% !important;
 }
+
+/*
+ * Botão customizado do Menu de Usuário
+ */
+
+/* Este é o seu 'style={{...}}' e 'onMouseLeave' */
+/* Garante o estado inicial e a transição que você quer */
+.btn.user-menu-button {
+  transition: all 0.3s ease;
+  background-color: white;
+  box-shadow: none;
+}
+
+/* Este é o seu 'onMouseEnter' e 'onMouseUp' */
+/* Define o visual do HOVER (mouse em cima) */
+.btn.user-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  color: #f8f9fa; /* Garante que o texto continue claro */
+}
+
+/* Este é o seu 'onMouseDown' */
+/* Define o visual PRENSADO (enquanto clica) */
+.btn.user-menu-button:active {
+  background-color: transparent !important; /* O !important é para ganhar do :active do Bootstrap */
+  box-shadow: none !important;
+  color: #f8f9fa !important;
+}

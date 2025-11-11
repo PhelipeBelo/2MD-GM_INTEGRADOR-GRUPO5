@@ -102,40 +102,29 @@ export default function Page() {
           </div>
 
           <div className="dropdown text-center position-relative">
-            <button
-              className="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill px-3 py-2"
-              id="userMenu"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              style={{
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(255,255,255,0.15)";
-                e.currentTarget.style.boxShadow = "0 0 10px rgba(255,255,255,0.5)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              <img
-                src="https://ui-avatars.com/api/?name=GL&background=0d6efd&color=fff"
-                alt="Avatar"
-                className="rounded-circle border border-light"
-                width="32"
-                height="32"
-              />
-              <span className="fw-semibold">Administrador</span>
-              <i className="bi bi-chevron-down"></i>
-            </button>
+          <button
+            className="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill px-3 py-2 user-menu-button"
+            id="userMenu"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="https://ui-avatars.com/api/?name=ADM&background=0d6efd&color=fff"
+              alt="Avatar"
+              className="rounded-circle border border-light"
+              width="32"
+              height="32"
+            />
+            <span className="fw-semibold">Administrador</span>
+            <i className="bi bi-chevron-down"></i>
+          </button>
 
             {/* ===== MENU DROPDOWN ===== */}
             <ul
-            className="dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu"
-            aria-labelledby="userMenu"
+              className="dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu"
+              aria-labelledby="userMenu"
 
-          >
+            >
               <li>
                 <h6 className="dropdown-header text-muted">Perfil</h6>
               </li>
