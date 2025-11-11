@@ -1,21 +1,9 @@
-/*
-=====================================================
-PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
-=====================================================
-/*
-* REVISÃO GM:
-* - Bordas mais suaves (--raio-borda: 12px)
-* - Sombra de card mais sutil e moderna.
-* - Bordas neutras (--texto-borda: #e5e7eb) para um look mais clean.
-* - Variáveis de transição para consistência.
-* - CORREÇÃO: Cor do texto dos inputs do modal.
-* - CORREÇÃO: Ícone de fechar do modal para apenas um 'x'.
-*/
+
 .pagina-admin-container {
   /* --- 1. CORES PRINCIPAIS (Paleta Blue) --- */
   --cor-primaria: #0956FF;
   --cor-primaria-hover: #0334D2;
-  --cor-primaria-sombra: rgba(9, 86, 255, 0.2); /* Sombra mais suave */
+  --cor-primaria-sombra: rgba(9, 86, 255, 0.2);
 
   /* --- 2. CORES DE FEEDBACK (Semânticas) --- */
   --cor-sucesso: #10b981;
@@ -27,7 +15,7 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   /* --- 3. FUNDOS (Usando a Paleta Blue) --- */
   --fundo-pagina: #f4f7fa;
   --fundo-card: #FFFFFF;
-  --fundo-hover: #EDF6FF;       /* Blue-50 */
+  --fundo-hover: #EDF6FF;
   --fundo-aba-inativa: #e5e7eb;
   --fundo-backdrop: rgba(17, 24, 39, 0.4);
 
@@ -43,24 +31,19 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   --texto-principal: #111827;
   --texto-secundario: #6b7280;
   --texto-branco: #FFFFFF;
-  --texto-borda: #e5e7eb; /* Borda neutra, fica mais limpo */
+  --texto-borda: #e5e7eb;
 
   /* --- 6. LAYOUT E ANIMAÇÃO --- */
-  --raio-borda: 12px; /* Mais sutil que 16px */
-  --raio-borda-sm: 8px; /* Para inputs e tags */
-  --raio-borda-pill: 99px; /* Para tags */
-  
-  /* Sombra mais suave e profissional */
+  --raio-borda: 12px;
+  --raio-borda-sm: 8px;
+  --raio-borda-pill: 99px;
+
   --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
   --sombra-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 
-  /* Transições consistentes */
   --transicao-rapida: all 0.2s ease-in-out;
   --transicao-media: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* =================================================== */
-/* FIM DO PAINEL DE CONTROLE */
-/* =================================================== */
 
 
 /* --- Animações --- */
@@ -79,8 +62,7 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-
-/* --- Estilo Base (Usa as variáveis acima) --- */
+/* --- 1. Estilo Base --- */
 .pagina-admin-container {
   background-color: var(--fundo-pagina);
   min-height: 100vh;
@@ -90,51 +72,13 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- 1. CABEÇALHO (Sticky) --- */
-.pagina-admin-container .admin-header {
-  background-color: var(--fundo-card);
-  border-bottom: 1px solid var(--texto-borda);
-  padding: 1.25rem 2.5rem; /* Um pouco mais fino */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  /* EFEITO MODERNO: Header fixo no topo */
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  box-shadow: var(--sombra-card);
-  
-  /* Animação de entrada */
-  animation: fadeInPage 0.4s ease-out;
-}
-.pagina-admin-container .admin-header h1 {
-  font-size: 1.25rem; font-weight: 600; color: var(--texto-principal); margin: 0;
-}
-.pagina-admin-container .admin-header p {
-  font-size: 0.875rem; color: var(--texto-secundario); margin: 0;
-}
-.pagina-admin-container .btn-sair {
-  font-size: 0.875rem; font-weight: 500; color: var(--texto-secundario);
-  background: none; border: none; cursor: pointer;
-  padding: 0.5rem 1rem; border-radius: var(--raio-borda-sm);
-  transition: var(--transicao-rapida);
-}
-.pagina-admin-container .btn-sair:hover {
-  /* Destaque destrutivo sutil */
-  background-color: var(--fundo-tag-destrutivo);
-  color: var(--cor-destrutiva);
-  transform: scale(1.05);
-}
-
 /* --- 2. CONTEÚDO PRINCIPAL (Main) --- */
 .pagina-admin-container .admin-main {
   max-width: 1400px;
   margin: 2.5rem auto;
   padding: 0 2.5rem;
-  /* Animação de entrada com atraso */
   animation: fadeInPage 0.5s ease-out 0.1s;
-  animation-fill-mode: backwards; /* Garante que comece invisível */
+  animation-fill-mode: backwards;
 }
 
 /* --- 3. ABAS DE NAVEGAÇÃO (Nav) --- */
@@ -149,7 +93,7 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   font-weight: 500;
   border-radius: var(--raio-borda-sm);
   border: 1px solid transparent;
-  background-color: transparent; /* Mais limpo */
+  background-color: transparent;
   color: var(--texto-secundario);
   cursor: pointer;
   transition: var(--transicao-media);
@@ -167,9 +111,8 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   box-shadow: var(--sombra-card);
 }
 .pagina-admin-container .admin-nav button.ativo:hover {
-  transform: translateY(0); /* Não levanta no hover se já estiver ativo */
+  transform: translateY(0);
 }
-
 
 /* --- 4. CARD DE CONTEÚDO (Section) --- */
 .pagina-admin-container .admin-content-card {
@@ -181,18 +124,17 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   transition: var(--transicao-media);
 }
 .pagina-admin-container .admin-content-card:hover {
-  box-shadow: var(--sombra-card-hover); /* Eleva o card no hover */
+  box-shadow: var(--sombra-card-hover);
 }
 
 .pagina-admin-container .admin-content-header {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid var(--texto-borda);
-  /* CORREÇÃO: Fundo branco para um look mais limpo */
   background-color: var(--fundo-card); 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* Responsividade */
+  flex-wrap: wrap;
   gap: 1rem;
 }
 .pagina-admin-container .admin-content-header h2 {
@@ -221,12 +163,10 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   border-bottom: 1px solid var(--texto-borda);
   gap: 1.5rem;
   transition: var(--transicao-rapida);
-  /* Efeito de borda esquerda no hover */
   box-shadow: inset 0 0 0 0 var(--cor-primaria);
 }
 .pagina-admin-container .item-card:hover {
   background-color: var(--fundo-hover);
-  /* EFEITO MODERNO: Borda azul sutil aparece na esquerda */
   box-shadow: inset 4px 0 0 0 var(--cor-primaria);
   transform: translateX(5px);
 }
@@ -254,14 +194,14 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
-  flex-wrap: wrap; /* Para responsividade */
+  flex-wrap: wrap;
 }
 .pagina-admin-container .status {
-  font-size: 0.8rem; /* Menor */
-  font-weight: 600; /* Mais forte */
+  font-size: 0.8rem;
+  font-weight: 600;
   padding: 0.25rem 0.75rem;
   border-radius: var(--raio-borda-pill);
-  text-transform: uppercase; /* Padrão de tags */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 .pagina-admin-container .status-disponivel {
@@ -288,7 +228,7 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
 }
 .pagina-admin-container button:hover,
 .pagina-admin-container .add-summary-button:hover {
-  transform: translateY(-2px); /* Efeito de elevação */
+  transform: translateY(-2px);
   box-shadow: var(--sombra-card);
 }
 
@@ -322,7 +262,7 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   box-shadow: 0 4px 10px var(--cor-sucesso-sombra);
 }
 
-/* Botão Primário SÓLIDO (Salvar, Adicionar) */
+/* Botão Primário (Salvar, Adicionar) */
 .pagina-admin-container .btn-primario-solid,
 .pagina-admin-container .add-summary-button {
   list-style: none;
@@ -333,7 +273,7 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
-  padding: 0.75rem 1.25rem; /* Botões principais maiores */
+  padding: 0.75rem 1.25rem;
 }
 .pagina-admin-container .btn-primario-solid:hover,
 .pagina-admin-container .add-summary-button:hover {
@@ -359,8 +299,6 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   align-items: center;
   z-index: 100;
   padding: 1rem;
-  
-  /* Animação de entrada do fundo */
   animation: fadeInBackdrop 0.3s ease-out;
 }
 .pagina-admin-container .modal-content {
@@ -370,8 +308,6 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   width: 100%;
   max-width: 600px;
   overflow: hidden;
-  
-  /* Animação de entrada do conteúdo */
   animation: slideInModal 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .pagina-admin-container .modal-header {
@@ -380,7 +316,6 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--texto-borda);
-  /* Fundo sutil para destacar o header do modal */
   background-color: var(--fundo-pagina); 
 }
 .pagina-admin-container .modal-header h3 {
@@ -391,25 +326,21 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
 .pagina-admin-container .modal-close-button {
   background: none;
   border: none;
-  font-size: 1.5rem; /* Tamanho do 'x' */
-  font-weight: 600; /* Mais forte */
+  font-size: 1.5rem;
+  font-weight: 600;
   color: var(--texto-secundario);
   cursor: pointer;
   padding: 0.5rem;
   line-height: 1;
   border-radius: var(--raio-borda-sm);
   transition: var(--transicao-rapida);
-  
-  /* CORREÇÃO: Usar um único 'x' visualmente */
-  content: 'x'; /* Isso adiciona o 'x' */
+  content: 'x';
 }
 .pagina-admin-container .modal-close-button:hover {
   color: var(--cor-destrutiva);
   background-color: var(--fundo-tag-destrutivo);
   transform: rotate(90deg) scale(1.1);
 }
-/* REMOVIDO: .pagina-admin-container .modal-close-button::before { content: '×'; }
-   O 'content' do próprio botão é suficiente agora. */
 
 .pagina-admin-container .modal-form {
   padding: 1.5rem;
@@ -417,39 +348,42 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   flex-direction: column;
   gap: 1.5rem;
 }
+
 .pagina-admin-container .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
 .pagina-admin-container .form-grid .full-width {
-  grid-column: 1 / -1; /* Campo que ocupa a largura total */
+  grid-column: 1 / -1;
 }
 
 .pagina-admin-container .form-grid div {
   display: flex;
   flex-direction: column;
 }
+
 .pagina-admin-container .form-grid label {
   font-size: 0.875rem;
   font-weight: 500;
-  margin-bottom: 0.5rem; /* Mais espaço */
+  margin-bottom: 0.5rem;
   color: var(--texto-secundario);
 }
+
 .pagina-admin-container .form-grid input[type="text"],
 .pagina-admin-container .form-grid select {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--texto-borda);
-  border-radius: var(--raio-borda-sm); /* Raio menor para inputs */
+  border-radius: var(--raio-borda-sm);
   transition: var(--transicao-rapida);
   background-color: var(--fundo-pagina);
-  /* CORREÇÃO: Cor do texto inserido nos inputs */
   color: var(--texto-principal);
 }
 .pagina-admin-container .form-grid input[type="text"]:focus,
 .pagina-admin-container .form-grid select:focus {
-  outline: none; /* Remove o outline feio */
+  outline: none;
   border-color: var(--cor-primaria);
   background-color: var(--fundo-card);
   box-shadow: 0 0 0 3px var(--cor-primaria-sombra);
@@ -473,40 +407,37 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
   }
   .pagina-admin-container .admin-header {
     padding: 1rem;
-    flex-direction: column; /* Empilha no celular */
+    flex-direction: column;
     gap: 0.5rem;
     text-align: center;
   }
-  
-  /* Faz as abas rolarem horizontalmente */
+
   .pagina-admin-container .admin-nav {
     overflow-x: auto;
     white-space: nowrap;
-    padding-bottom: 10px; /* Espaço para a barra de rolagem */
-    /* Esconde a barra de rolagem visualmente */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    padding-bottom: 10px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   .pagina-admin-container .admin-nav::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
   }
   .pagina-admin-container .admin-nav button {
-    flex-shrink: 0; /* Impede que os botões encolham */
+    flex-shrink: 0;
   }
 
   .pagina-admin-container .item-card {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-    /* Animação de hover desabilitada no mobile, mas mantém a borda */
     box-shadow: inset 4px 0 0 0 var(--cor-primaria);
   }
   .pagina-admin-container .item-card:hover {
-      transform: none; /* Remove o pulo no mobile */
+      transform: none;
   }
   .pagina-admin-container .item-actions {
     width: 100%;
-    justify-content: flex-start; /* Alinha botões à esquerda */
+    justify-content: flex-start;
     gap: 0.5rem;
   }
   
@@ -515,27 +446,59 @@ PAINEL DE CONTROLE DO TEMA (COM PALETA GM CORE BLUE)
     align-items: flex-start;
     gap: 1rem;
   }
-  /* Garante que o botão de "Adicionar" vá para baixo */
+
   .pagina-admin-container .admin-content-header .btn-primario-solid {
       width: 100%;
       text-align: center;
   }
 
   .pagina-admin-container .form-grid {
-    grid-template-columns: 1fr; /* 1 coluna no celular */
+    grid-template-columns: 1fr;
   }
   
   .pagina-admin-container .modal-backdrop {
-      align-items: flex-start; /* Modal começa do topo no celular */
+      align-items: flex-start;
       padding: 1rem;
   }
   .pagina-admin-container .modal-content {
-      margin-top: 5vh; /* Distância do topo */
+      margin-top: 5vh;
   }
   .pagina-admin-container .modal-footer {
-      flex-direction: column-reverse; /* Empilha botões do modal */
+      flex-direction: column-reverse;
   }
   .pagina-admin-container .modal-footer button {
       width: 100%;
   }
+}
+
+.margem_menu{
+  margin-top: 30% !important;
+}
+
+/*
+ * Botão customizado do Menu de Usuário
+ */
+
+/* Este é o seu 'style={{...}}' e 'onMouseLeave' */
+/* Garante o estado inicial e a transição que você quer */
+.btn.user-menu-button {
+  transition: all 0.3s ease;
+  background-color: white;
+  box-shadow: none;
+}
+
+/* Este é o seu 'onMouseEnter' e 'onMouseUp' */
+/* Define o visual do HOVER (mouse em cima) */
+.btn.user-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  color: #f8f9fa; /* Garante que o texto continue claro */
+}
+
+/* Este é o seu 'onMouseDown' */
+/* Define o visual PRENSADO (enquanto clica) */
+.btn.user-menu-button:active {
+  background-color: transparent !important; /* O !important é para ganhar do :active do Bootstrap */
+  box-shadow: none !important;
+  color: #f8f9fa !important;
 }

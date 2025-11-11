@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
-import './pagAdmin.css'; // Vamos usar o novo CSS (atualizado)
+import './pagAdmin.css';
 
-// --- DADOS ESTÁTICOS (Mock) ---
+// --- DADOS ESTÁTICOS ---
 const mockEquipamentos = [
   { id: 1, nome: "Parafusadeira DFT08MFMMS MAKITA", categoria: "Elétrica", codigo: "FUR-001", localizacao: "Prateleira A3", status: "disponivel" },
   { id: 2, nome: "Serra tico tico industrial 110 volts", categoria: "Manual", codigo: "CHV-002", localizacao: "Gaveta B1", status: "disponivel" },
@@ -101,77 +101,61 @@ export default function Page() {
             </div>
           </div>
 
-          {/* ===== PERFIL DO USUÁRIO ===== */}
-          <div className="dropdown">
-          
-              <button
-                className="btn btn-outline-light d-flex align-items-center gap-2 rounded-pill px-3 py-2"
-                id="userMenu"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                style={{
-                  transition: "all 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.15)";
-                  e.currentTarget.style.boxShadow = "0 0 10px rgba(255,255,255,0.5)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              >
-                <img
-                  src="https://ui-avatars.com/api/?name=GL&background=0d6efd&color=fff"
-                  alt="Avatar"
-                  className="rounded-circle border border-light"
-                  width="32"
-                  height="32"
-                />
-                <span className="fw-semibold ">Administrador</span>
-                <i className="bi bi-chevron-down "></i>
-              </button>
-            
-              {/* ===== MENU DROPDOWN ===== */}
-              <ul
-                className="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 p-2"
-                aria-labelledby="userMenu"
-              >
-                <li>
-                  <h6 className="dropdown-header text-muted">Perfil</h6>
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item d-flex align-items-center gap-2"
-                    style={{ border: "none" }}
-                    onClick={() => router.push("/perfil")}
-                  >
-                    <i className="bi bi-person-circle"></i> Meu Perfil
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item d-flex align-items-center gap-2 mt-1"
-                    style={{ border: "none" }}
-                    onClick={() => router.push("/configuracoes")}
-                  >
-                    <i className="bi bi-gear"></i> Configurações
-                  </button>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item text-danger d-flex align-items-center gap-2"
-                    style={{ border: "none" }}
-                    onClick={() => router.push("/login")}
-                  >
-                    <i className="bi bi-box-arrow-right"></i> Sair
-                  </button>
-                </li>
-              </ul>
-            
+          <div className="dropdown text-center position-relative">
+          <button
+            className="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill px-3 py-2 user-menu-button"
+            id="userMenu"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="https://ui-avatars.com/api/?name=ADM&background=0d6efd&color=fff"
+              alt="Avatar"
+              className="rounded-circle border border-light"
+              width="32"
+              height="32"
+            />
+            <span className="fw-semibold">Administrador</span>
+            <i className="bi bi-chevron-down"></i>
+          </button>
+
+            {/* ===== MENU DROPDOWN ===== */}
+            <ul
+              className="dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu"
+              aria-labelledby="userMenu"
+
+            >
+              <li>
+                <h6 className="dropdown-header text-muted">Perfil</h6>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item d-flex align-items-center gap-2"
+                  onClick={() => router.push("/perfil")}
+                >
+                  <i className="bi bi-person-circle"></i> Meu Perfil
+                </button>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item d-flex align-items-center gap-2 mt-1"
+                  onClick={() => router.push("/configuracoes")}
+                >
+                  <i className="bi bi-gear"></i> Configurações
+                </button>
+              </li>
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+              <li>
+                <button
+                  className="dropdown-item text-danger d-flex align-items-center gap-2"
+                  onClick={() => router.push("/login")}
+                >
+                  <i className="bi bi-box-arrow-right"></i> Sair
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -301,11 +285,7 @@ export default function Page() {
 
       </main>
 
-      {/* ===============================================
-      O MODAL DE ADICIONAR / EDITAR
-      ===============================================
-      Este modal só aparece se "modalStatus" não for null
-      */}
+      {/* O MODAL DE ADICIONAR / EDITAR */}
       {modalStatus && (
         <div className="modal-backdrop">
           <div className="modal-content">
