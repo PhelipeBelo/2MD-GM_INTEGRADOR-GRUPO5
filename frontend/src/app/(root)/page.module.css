@@ -1,5 +1,5 @@
 :root {
-  --brand-blue: #0e5a91;
+  --brand-blue: #1d5fa0;
   --foreground: #fff;
 }
 
@@ -10,7 +10,7 @@ body, html {
   height: 100%;
 }
 
-/* Container principal */
+
 .loginContainer {
   position: relative;
   display: flex;
@@ -21,7 +21,6 @@ body, html {
 
 }
 
-/* Parte de baixo */
 .formPanelLeft, .formPanelRight {
   width: 50%;
   height: 100vh;
@@ -36,18 +35,14 @@ body, html {
 }
 
 .formPanelRight {
-  
   background-color: var(--brand-blue); 
   z-index: 1;
-  
-background-image: url('/img/portao.png');
-  
+  background-image: url('/img/fundo.png');
  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-/* Overlay (andar de cima) */
 .overlayContainer {
   position: absolute;
   top: 0;
@@ -59,11 +54,16 @@ background-image: url('/img/portao.png');
   transition: transform 0.8s ease-in-out;
 }
 
-/* Painel esquerdo azul */
 .overlayPanelLeft {
   width: 50%;
   height: 100%;
-  background-color: var(--brand-blue);
+  background: linear-gradient(
+    to bottom,
+    #1e528c, 
+    #224c89,
+    #3381bd,
+    #3991d1 
+  );
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -73,14 +73,14 @@ background-image: url('/img/portao.png');
   padding: 40px;
 }
 
-/* Painel direito com imagem */
+
 .overlayPanelRight {
   width: 50%;
   height: 100%;
-  background-color: #fff;
-  background-image: url('/img/fundo.png');
-  background-size: contain;
-  background-position: center;
+  background-color: #fff; 
+  background-image: url('/img/fundo2.jpg');
+  background-size: cover; 
+  background-position: center center; 
   background-repeat: no-repeat;
 }
 

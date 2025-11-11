@@ -56,17 +56,6 @@ export default function LoginPage() {
                 <div className={styles.overlayPanelRight}></div>
             </div>
 
-        
-            <div className={styles.carWrapper}>
-                <Image 
-                    src="/img/carro2.png"
-                    alt="Carro" 
-                    width={350} 
-                    height={175}
-                    className={styles.carImage}
-                    priority
-                />
-            </div>
         </main>
     );
 }
