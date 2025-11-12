@@ -1,0 +1,14 @@
+
+
+USE gm_api;
+
+CREATE TABLE IF NOT EXISTS equipamentos_ga (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    marca VARCHAR(255) NOT NULL,
+    serie VARCHAR(50) UNIQUE NOT NULL,
+    eq_status ENUM('Em uso', 'Disponível') NOT NULL DEFAULT 'Disponível',
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
