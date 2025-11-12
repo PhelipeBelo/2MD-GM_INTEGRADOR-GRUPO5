@@ -1,20 +1,16 @@
--- Migration: Inserir dados iniciais
--- Data: 2025-01-15
--- Descrição: Dados iniciais para teste do sistema
-
-USE produtos_api;
+USE gm_api;
 
 -- Inserir usuários iniciais (senha: 123456)
 -- Hash gerado com bcrypt para a senha "123456" (validado)
-INSERT INTO usuarios (nome, email, senha, tipo) VALUES
-('Administrador', 'admin@produtos.com', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'admin'),
-('João Silva', 'joao@email.com', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'comum'),
-('Maria Souza', 'maria@email.com', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'comum');
+INSERT INTO usuarios (nome, gmin, senha, area, turno, tipo) VALUES
+('Administrador', '11111', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'ADM' ,'admin'),
+('João Silva', '10223', 'Molde', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'comum'),
+('Maria Souza', '45429', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'Fresna', 'comum');
 
 -- Inserir produtos iniciais
-INSERT INTO produtos (nome, descricao, preco, categoria, imagem) VALUES
-('Smartphone Galaxy', 'Celular Samsung Galaxy com 128GB', 1299.99, 'Eletrônicos', 'smartphone.jpg'),
-('Notebook Dell', 'Notebook Dell Inspiron 15 polegadas', 2499.99, 'Eletrônicos', 'notebook.jpg'),
-('Camiseta Polo', 'Camiseta polo masculina azul', 89.90, 'Roupas', 'camiseta.jpg'),
-('Livro JavaScript', 'Livro sobre programação JavaScript', 79.90, 'Livros', 'livro.jpg');
+INSERT INTO equipamentos_ga (nome, marca, serie) VALUES
+('Parafusadeira DFT08MFMMS', 'MAKITA', 12345),
+('Serra Tico Tico Industrial', 'BOSCH', 67890),
+('Furadeira de Impacto com Maleta', 'MAKITA', 23456),
+('Esmerilhadeira 114 3MM GWS 6-115', 'BOSCH',34567);
 
