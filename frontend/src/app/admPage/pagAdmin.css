@@ -1,9 +1,26 @@
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+}
+
 .pagadmin-container {
   background-color: #edf6ff;
   min-height: 100vh;
   color: #333;
   font-family: 'Inter', sans-serif;
-  padding-bottom: 60px;
+  /* Padding-top e bottom adicionados para substituir o py-4 */
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 
 /* ---------- Painel Superior ---------- */
@@ -104,17 +121,21 @@
   color: #007bff;
 }
 
-/* ---------- Cards de Equipamentos ---------- */
+/* ---------- Cards de Equipamentos (COM SHADOW CORRIGIDO) ---------- */
 .card-card {
   background: #fff;
   border-radius: 18px;
   overflow: hidden;
   transition: all 0.2s ease-in-out;
   border: 1px solid #e7eef5;
+  /* Sombra mais pronunciada */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .card-card:hover {
   transform: scale(1.02);
+  /* Sombra mais forte no hover */
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 
 .card-top {
@@ -145,17 +166,21 @@
   transform: scale(1.1);
 }
 
-/* ---------- Cards de Solicitações e Em Uso ---------- */
+/* ---------- Cards de Solicitações e Em Uso (COM SHADOW CORRIGIDO) ---------- */
 .request-card {
   background: #fff;
   border-radius: 14px;
   border: 1px solid #e6ecf5;
   padding: 16px;
   transition: 0.3s ease;
+  /* Sombra mais pronunciada */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .request-card:hover {
   transform: scale(1.02);
+  /* Sombra mais forte no hover */
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* ---------- Modal ---------- */
@@ -186,6 +211,7 @@
     transform: translateY(-20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -221,7 +247,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 320px;
-  font-size: 15px;
+  font-size: 15px; /* Corrigido de _font-size */
 }
 
 /* ---------- Responsividade ---------- */
@@ -243,4 +269,36 @@
   .pagmodal {
     width: 90%;
   }
+}
+
+/* --------------------------------------- */
+/* Estilos do Header Corrigidos */
+.margem_menu {
+  margin-top: 0.5rem !important; /* Corrigido de 30% */
+}
+
+.btn.user-menu-button {
+  transition: all 0.3s ease;
+  /* background-color: white; */ /* Removido para o btn-outline-light funcionar */
+  box-shadow: none;
+}
+
+.btn.user-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  color: #f8f9fa;
+}
+
+.btn.user-menu-button:active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: #f8f9fa !important;
+}
+
+.btn.user-menu-button .fw-semibold {
+ color: #0d6efd;
+}
+
+.btn.user-menu-button:hover .fw-semibold {
+  color: #f8f9fa; /* Cor branca */
 }
