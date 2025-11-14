@@ -41,7 +41,6 @@ export default function GLPage() {
           </div>
         </div>
 
-        {/* ===== PERFIL DO USUÁRIO ===== */}
         <div className="dropdown">
           <button
             className="btn btn-outline-light d-flex align-items-center gap-2 rounded-pill px-3 py-2"
@@ -71,7 +70,6 @@ export default function GLPage() {
             <i className="bi bi-chevron-down"></i>
           </button>
 
-          {/* ===== MENU DROPDOWN ===== */}
           <ul
             className="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2"
             aria-labelledby="userMenu"
@@ -101,7 +99,7 @@ export default function GLPage() {
             <li>
               <button
                 className="dropdown-item text-danger d-flex align-items-center gap-2"
-                onClick={() => router.push("/login")} // troque para sua rota
+                onClick={() => router.push("/login")} 
               >
                 <i className="bi bi-box-arrow-right"></i> Sair
               </button>
@@ -110,7 +108,6 @@ export default function GLPage() {
         </div>
       </div>
 
-      {/* ===== ANIMAÇÃO CSS ===== */}
       <style jsx>{`
         @keyframes pulse {
           0% {
