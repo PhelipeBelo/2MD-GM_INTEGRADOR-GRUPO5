@@ -3,9 +3,9 @@ USE gm_api;
 -- Inserir usuários iniciais (senha: 123456)
 -- Hash gerado com bcrypt para a senha "123456" (validado)
 INSERT INTO usuarios (nome, gmin, senha, area, turno, tipo) VALUES
-('Administrador', '11111', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'ADM' ,'admin'),
-('João Silva', '10223', 'Molde', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'comum'),
-('Maria Souza', '45429', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'Fresna', 'comum');
+('Administrador', '11111', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'ADM' , 1 ,'admin'),
+('João Silva', '10223', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'Molde' , 1, 'comum'),
+('Maria Souza', '45429', '$2a$10$BLAcJu1irAzg06WbtoLoPe0RA.hkfZ0oJ25KYARPkHWRweJuWBALy', 'Fresna', 2, 'comum');
 
 -- Inserir produtos iniciais
 INSERT INTO equipamentos_ga (nome, marca, serie) VALUES
