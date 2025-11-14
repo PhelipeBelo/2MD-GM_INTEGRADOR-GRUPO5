@@ -193,7 +193,7 @@ export default function LoginPage() {
 
             <div className={styles.overlayContainer}>
                 <div className={styles.overlayPanelLeft}>
-                    <h1 className="fw-bold">Bem Vindo de Volta!</h1>
+                    <h1 className="fw-bold">Gerenciador de Ferramentas</h1>
                     <button
                         className="btn btn-outline-light btn-lg mt-3"
                         onClick={handleLoginClick}>
