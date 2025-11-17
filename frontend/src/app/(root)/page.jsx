@@ -1,49 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import styles from './page.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-const mockApiDatabase = {
-    '12345': {
-        name: 'Ana Carolina Souza',
-        photoUrl: 'https://stories.cnnbrasil.com.br/wp-content/uploads/sites/9/2025/10/V%E2%9D%A4%EF%B8%8FV.jpg'
-    },
-    '54321': {
-        name: 'Bruno Marques Silva',
-        photoUrl: 'https://www.meioemensagem.com.br/wp-content/uploads/2024/03/Blog-da-Regina-2024.jpg'
-    },
-    '11111': {
-        name: 'Carlos Eduardo Lima',
-        photoUrl: 'https://i.metroimg.com/UrJuFOcQsnuuQGQ6KaPqsksEfuOjGQtStEOfr4sC7m4/w:1200/q:85/f:webp/plain/2025/08/01215806/saiba-o-desfecho-de-processo-de-suzane-von-richthofen-contra-jornalista.jpg'
-    }
-};
-
-
-const fetchEmployeeData = (registro) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const employee = mockApiDatabase[registro];
-            if (employee) {
-                resolve(employee);
-            } else {
-                reject('Funcionário não encontrado');
-            }
-        }, 1000);
-    });
-};
-
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
     const [isOverlayVisible, setIsOverlayVisible] = useState(true);
-
     const [registro, setRegistro] = useState('');
-    const [employee, setEmployee] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const [employee, setEmployee] = useState(null);
+
+    const router = useRouter();
 
     const handleLoginClick = () => {
         setIsOverlayVisible(false);
@@ -56,20 +26,36 @@ export default function LoginPage() {
         setError('');
     };
 
-    const handleRegistroBlur = async () => {
-        if (registro.trim() === '') {
-            return;
-        }
 
+    const handleBuscarUsuario = async () => {
+
+        if (registro.trim() === '') return;
+        if (employee && employee.gmin === registro) return;
         setIsLoading(true);
-        setEmployee(null);
         setError('');
+        setEmployee(null);
 
         try {
-            const data = await fetchEmployeeData(registro);
-            setEmployee(data);
+            const response = await fetch('http://localhost:3001/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gmin: registro.trim() }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.sucesso) {
+                throw new Error(data.mensagem || 'Funcionário não encontrado.');
+            }
+
+            setEmployee(data.dados.usuario);
+
+            localStorage.setItem('token', data.dados.token);
+            localStorage.setItem('usuario', JSON.stringify(data.dados.usuario));
+
         } catch (err) {
-            setError(String(err));
+            setError(err.message);
+            setEmployee(null);
         } finally {
             setIsLoading(false);
         }
@@ -77,15 +63,18 @@ export default function LoginPage() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
         if (!employee) {
-            setError('Por favor, insira um registro válido primeiro.');
+            handleBuscarUsuario();
             return;
         }
-        console.log('Logando com o funcionário:', employee.name);
-        alert(`Login validado para ${employee.name}`);
 
+        if (employee.tipo == 'ADM') {
+            router.push('/admPage');
+        } else {
+            router.push('/glPage');
+        }
     };
-
 
     const containerClasses = `${styles.loginContainer} ${!isOverlayVisible ? styles.reveal : ''}`;
 
@@ -94,31 +83,26 @@ export default function LoginPage() {
 
             <div className={styles.formPanelLeft}>
 
-
                 <form className="p-5 text-center" onSubmit={handleSubmit}>
                     <h1 className="fw-bold mb-4">Faça o login</h1>
 
                     <div className="form-floating mb-3">
                         <input
                             type="text"
-
-                            className={`form-control ${error ? 'is-invalid' : ''}`}
+                            className={`form-control ${error ? 'is-invalid' : ''} ${employee ? 'is-valid' : ''}`}
                             id="registroInput"
                             placeholder="Insira seu Registro"
                             autoComplete="off"
-
-
                             value={registro}
-                            onChange={(e) => setRegistro(e.target.value)}
-
-
-                            onBlur={handleRegistroBlur}
-
-
+                            onChange={(e) => {
+                                setRegistro(e.target.value);
+                                if (error) setError('');
+                                if (employee) setEmployee(null);
+                            }}
+                            onBlur={handleBuscarUsuario}
                             disabled={isLoading}
                         />
                         <label htmlFor="registroInput">Insira seu Registro</label>
-
 
                         {error && (
                             <div className="invalid-feedback text-start">
@@ -127,10 +111,9 @@ export default function LoginPage() {
                         )}
                     </div>
 
-
                     <div
                         className="text-center my-4 d-flex align-items-center justify-content-center"
-                        style={{ minHeight: '110px' }}
+                        style={{ minHeight: '100px' }}
                     >
                         {isLoading && (
                             <div className="spinner-border" style={{ color: '#1d5fa0' }} role="status">
@@ -138,50 +121,47 @@ export default function LoginPage() {
                             </div>
                         )}
 
-                        {employee && !isLoading && (
-                            <div className="d-flex align-items-center justify-content-center p-3 bg-light rounded w-100">
+                        {!isLoading && employee && (
+                            <div className="d-flex align-items-center justify-content-center p-3 bg-light rounded w-100 shadow-sm fade-in">
                                 <img
-                                    src={employee.photoUrl}
-                                    alt={`Foto de ${employee.name}`}
+                                    src={employee.icon}
+                                    alt={`Foto de ${employee.nome}`}
                                     className="rounded-circle me-3"
-                                    style={{ width: '70px', height: '70px', objectFit: 'cover' }}
+                                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                                 />
                                 <div className="text-start">
-                                    <span className="d-block text-muted small">Funcionário:</span>
-                                    <h5 className="mb-0">{employee.name}</h5>
+                                    <span className="d-block text-muted small" style={{ fontSize: '0.8rem' }}>Bem-vindo(a),</span>
+                                    <h5 className="mb-0 text-dark fw-bold">{employee.nome}</h5>
                                 </div>
                             </div>
                         )}
 
-                        {!isLoading && !employee && (
+                        {!isLoading && !employee && !error && (
                             <div className="text-muted small">
-                                Digite um registro e clique fora do campo para buscar.
+                                Digite seu GMIN e clique fora para buscar.
                             </div>
                         )}
                     </div>
 
                     <button
                         type="submit"
-                        className="btn w-100 p-3"
+                        className="btn w-100 p-3 mt-2"
                         style={{
-                            backgroundColor: '#1d5fa0',
+                            backgroundColor: employee ? '#198754' : '#1d5fa0',
                             color: 'white',
-                            borderColor: '#1d5fa0'
+                            border: 'none',
+                            transition: 'background-color 0.3s'
                         }}
-                        disabled={!employee || isLoading}
+                        disabled={isLoading || (!!error)}
                     >
-                        Validar
+                        {isLoading ? 'Buscando...' : (employee ? 'Entrar no Sistema' : 'Validar')}
                     </button>
 
                     <button
                         type="button"
                         className="btn btn-link mt-3"
                         onClick={handleBackClick}
-                        style={{
-
-                            color: '#1d5fa0'
-
-                        }}
+                        style={{ color: '#1d5fa0' }}
                     >
                         Voltar
                     </button>
@@ -190,17 +170,15 @@ export default function LoginPage() {
             </div>
             <div className={styles.formPanelRight}></div>
 
-
             <div className={styles.overlayContainer}>
                 <div className={styles.overlayPanelLeft}>
-                    <h1 className="fw-bold">Gerenciador de Ferramentas</h1>
+                    <h1 className="fw-bold">Bem Vindo de Volta!</h1>
                     <button
                         className="btn btn-outline-light btn-lg mt-3"
                         onClick={handleLoginClick}>
                         Entrar
                     </button>
                 </div>
-
                 <div className={styles.overlayPanelRight}></div>
             </div>
 
