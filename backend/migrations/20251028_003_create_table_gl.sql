@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS gl_ga (
     gmin VARCHAR(10) UNIQUE NOT NULL,
     area ENUM('Marcação Estampa', 'Molde', 'Prensa Hidráulica', 'Fresna', 'ADM') NOT NULL,
     turno TINYINT,
+    icon TEXT,
     data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
     data_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

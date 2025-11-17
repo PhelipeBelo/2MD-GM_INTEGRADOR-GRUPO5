@@ -1,5 +1,3 @@
-
-
 USE gm_api;
 
 CREATE TABLE IF NOT EXISTS equipamentos_ga (

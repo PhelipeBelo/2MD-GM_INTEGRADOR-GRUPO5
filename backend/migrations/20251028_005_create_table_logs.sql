@@ -2,7 +2,7 @@
 -- Data: 2025-10-28
 -- Descrição: Tabela para registrar logs de acesso às rotas da API
 
-USE produtos_api;
+USE gm_api;
 
 CREATE TABLE IF NOT EXISTS logs (
     id INT PRIMARY KEY AUTO_INCREMENT,

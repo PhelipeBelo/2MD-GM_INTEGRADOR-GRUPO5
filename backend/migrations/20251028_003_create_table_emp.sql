@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS equipamento_emp_ga (
     id INT PRIMARY KEY AUTO_INCREMENT,
 

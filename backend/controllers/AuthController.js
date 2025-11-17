@@ -8,43 +8,43 @@ class AuthController {
     // POST /auth/login - Fazer login
     static async login(req, res) {
         try {
-            const { email, senha } = req.body;
+            const { gmin } = req.body;
             
             // Validações básicas
-            if (!email || email.trim() === '') {
+            if (!gmin || gmin.trim() === '') {
                 return res.status(400).json({
                     sucesso: false,
-                    erro: 'Email obrigatório',
-                    mensagem: 'O email é obrigatório'
+                    erro: 'GMIN obrigatório',
+                    mensagem: 'O GMIN é obrigatório'
                 });
             }
 
-            if (!senha || senha.trim() === '') {
-                return res.status(400).json({
-                    sucesso: false,
-                    erro: 'Senha obrigatória',
-                    mensagem: 'A senha é obrigatória'
-                });
-            }
+            // if (!senha || senha.trim() === '') {
+            //     return res.status(400).json({
+            //         sucesso: false,
+            //         erro: 'Senha obrigatória',
+            //         mensagem: 'A senha é obrigatória'
+            //     });
+            // }
 
-            // Validação básica de formato de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                return res.status(400).json({
-                    sucesso: false,
-                    erro: 'Email inválido',
-                    mensagem: 'Formato de email inválido'
-                });
-            }
+            // // Validação básica de formato de email
+            // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // if (!emailRegex.test(email)) {
+            //     return res.status(400).json({
+            //         sucesso: false,
+            //         erro: 'Email inválido',
+            //         mensagem: 'Formato de email inválido'
+            //     });
+            // }
 
             // Verificar credenciais
-            const usuario = await UsuarioModel.verificarCredenciais(email.trim(), senha);
+            const usuario = await UsuarioModel.verificarCredenciais(gmin.trim());
             
             if (!usuario) {
                 return res.status(401).json({
                     sucesso: false,
                     erro: 'Credenciais inválidas',
-                    mensagem: 'Email ou senha incorretos'
+                    mensagem: 'GMIN incorreto'
                 });
             }
 
@@ -52,7 +52,7 @@ class AuthController {
             const token = jwt.sign(
                 { 
                     id: usuario.id, 
-                    email: usuario.email,
+                    email: usuario.gmin,
                     tipo: usuario.tipo 
                 },
                 JWT_CONFIG.secret,
@@ -67,8 +67,9 @@ class AuthController {
                     usuario: {
                         id: usuario.id,
                         nome: usuario.nome,
-                        email: usuario.email,
-                        tipo: usuario.tipo
+                        gmin: usuario.gmin,
+                        tipo: usuario.tipo,
+                        icon: usuario.icon
                     }
                 }
             });
