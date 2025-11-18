@@ -181,7 +181,10 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
 // -----------------------------------------------------------------
 // 3. SEU COMPONENTE PRINCIPAL (MODIFICADO)
 // -----------------------------------------------------------------
+// ... (mantenha os imports e o componente FormEquipamento exatamente como estão)
+
 export default function PagAdmin() {
+  // ... (mantenha todos os estados e funções: useState, useEffect, salvarEquipamento, etc.)
   const [abaAtiva, setAbaAtiva] = useState("equipamentos");
   const [equipamentos, setEquipamentos] = useState([]);
   const [solicitacoes, setSolicitacoes] = useState([]);
@@ -190,101 +193,36 @@ export default function PagAdmin() {
   const [modalData, setModalData] = useState(null);
   const [toast, setToast] = useState(null);
 
-  // --- NOVOS ESTADOS E REF PARA O DROPDOWN ---
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // --- EFEITO PARA FECHAR O MENU AO CLICAR FORA ---
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsMenuOpen(false);
       }
     };
-    // Adiciona o listener
     document.addEventListener("mousedown", handleClickOutside);
-    // Limpa o listener ao desmontar
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuRef]);
 
-  // Simula backend (useEffect inicial)
   useEffect(() => {
-    // --- DADOS SIMULADOS ATUALIZADOS ---
+    // ... (seu useEffect de dados simulados permanece igual)
     setEquipamentos([
-      {
-        id: 1,
-        nome: "Parafusadeira MAKITA DFT08",
-        categoria: "Elétrica",
-        codigo: "FUR-001",
-        local: "Prateleira A3",
-        status: "Disponível", // Status adicionado
-      },
-      {
-        id: 2,
-        nome: "Serra Tico-Tico Industrial",
-        categoria: "Elétrica",
-        codigo: "CHV-002",
-        local: "Gaveta B1",
-        status: "Disponível", // Status adicionado
-      },
-      {
-        id: 3,
-        nome: "Esmerilhadeira BOSCH GWS 115",
-        categoria: "Elétrica",
-        codigo: "ESM-003",
-        local: "Setor B",
-        status: "Em Uso", // Status adicionado
-      },
-      {
-        id: 4,
-        nome: "Furadeira DeWalt 20V",
-        categoria: "Elétrica",
-        codigo: "FUR-004",
-        local: "Prateleira C1",
-        status: "Disponível", // Status adicionado
-      },
-      {
-        id: 5,
-        nome: "Serra Circular Makita",
-        categoria: "Elétrica",
-        codigo: "SER-005",
-        local: "Prateleira C2",
-        status: "Disponível", // Status adicionado
-      },
+      { id: 1, nome: "Parafusadeira MAKITA DFT08", categoria: "Elétrica", codigo: "FUR-001", local: "Prateleira A3", status: "Disponível" },
+      { id: 2, nome: "Serra Tico-Tico Industrial", categoria: "Elétrica", codigo: "CHV-002", local: "Gaveta B1", status: "Disponível" },
+      { id: 3, nome: "Esmerilhadeira BOSCH GWS 115", categoria: "Elétrica", codigo: "ESM-003", local: "Setor B", status: "Em Uso" },
+      { id: 4, nome: "Furadeira DeWalt 20V", categoria: "Elétrica", codigo: "FUR-004", local: "Prateleira C1", status: "Disponível" },
+      { id: 5, nome: "Serra Circular Makita", categoria: "Elétrica", codigo: "SER-005", local: "Prateleira C2", status: "Disponível" },
     ]);
-
     setSolicitacoes([
-      {
-        id: 1,
-        equipamentoId: 4, // ID Referenciado
-        equipamentoNome: "Furadeira DeWalt 20V",
-        usuario: "João Silva",
-        local: "Setor A",
-        data: "2025-11-12 09:30",
-        status: "Pendente",
-      },
-      {
-        id: 2,
-        equipamentoId: 5, // ID Referenciado
-        equipamentoNome: "Serra Circular Makita",
-        usuario: "Maria Santos",
-        local: "Linha 3",
-        data: "2025-11-12 10:10",
-        status: "Pendente",
-      },
+      { id: 1, equipamentoId: 4, equipamentoNome: "Furadeira DeWalt 20V", usuario: "João Silva", local: "Setor A", data: "2025-11-12 09:30", status: "Pendente" },
+      { id: 2, equipamentoId: 5, equipamentoNome: "Serra Circular Makita", usuario: "Maria Santos", local: "Linha 3", data: "2025-11-12 10:10", status: "Pendente" },
     ]);
-
     setEmUso([
-      {
-        id: 1, // ID do Empréstimo
-        equipamentoId: 3, // ID Referenciado
-        equipamentoNome: "Esmerilhadeira BOSCH GWS 115",
-        usuario: "Carlos Lima",
-        local: "Setor B",
-        dataInicio: "2025-11-10",
-      },
+      { id: 1, equipamentoId: 3, equipamentoNome: "Esmerilhadeira BOSCH GWS 115", usuario: "Carlos Lima", local: "Setor B", dataInicio: "2025-11-10" },
     ]);
   }, []);
 
@@ -298,124 +236,72 @@ export default function PagAdmin() {
     setModalData(null);
   };
 
-  // Esta função agora recebe os dados DIRETO do formulário (incluindo status)
   const salvarEquipamento = (equip) => {
     if (equip.id) {
-      // Lógica de EDIÇÃO
-      setEquipamentos((prev) =>
-        prev.map((e) => (e.id === equip.id ? equip : e))
-      );
-      setToast({
-        type: "success",
-        message: "✅ Equipamento atualizado com sucesso!",
-      });
+      setEquipamentos((prev) => prev.map((e) => (e.id === equip.id ? equip : e)));
+      setToast({ type: "success", message: "✅ Equipamento atualizado com sucesso!" });
     } else {
-      // Lógica de CRIAÇÃO
-      setEquipamentos((prev) => [
-        ...prev,
-        { ...equip, id: Date.now() }, // Cria um novo ID
-      ]);
-      setToast({
-        type: "success",
-        message: "✅ Novo equipamento cadastrado!",
-      });
+      setEquipamentos((prev) => [...prev, { ...equip, id: Date.now() }]);
+      setToast({ type: "success", message: "✅ Novo equipamento cadastrado!" });
     }
     fecharModal();
   };
 
   const excluirEquipamento = (id) => {
     setEquipamentos((prev) => prev.filter((e) => e.id !== id));
-    setToast({
-      type: "danger",
-      message: "❌ Equipamento excluído.",
-    });
+    setToast({ type: "danger", message: "❌ Equipamento excluído." });
   };
 
-  // --- LÓGICA DE APROVAÇÃO ATUALIZADA ---
   const aprovarSolicitacao = (id) => {
     const solicitacao = solicitacoes.find((s) => s.id === id);
     if (!solicitacao) return;
-
-    // 1. Atualiza o status na lista principal de equipamentos
-    setEquipamentos((prev) =>
-      prev.map((eq) =>
-        eq.id === solicitacao.equipamentoId
-          ? { ...eq, status: "Em Uso" } // Define o status como "Em Uso"
-          : eq
-      )
-    );
-
-    // 2. Cria o novo registro de "Em Uso"
+    setEquipamentos((prev) => prev.map((eq) => eq.id === solicitacao.equipamentoId ? { ...eq, status: "Em Uso" } : eq));
     const novoUso = {
-      id: Date.now(), // ID do empréstimo
+      id: Date.now(),
       equipamentoId: solicitacao.equipamentoId,
       equipamentoNome: solicitacao.equipamentoNome,
       usuario: solicitacao.usuario,
       local: solicitacao.local,
       dataInicio: new Date().toISOString().split("T")[0],
     };
-
-    // 3. Adiciona a "Em Uso" e remove de "Solicitações"
     setEmUso((prev) => [...prev, novoUso]);
     setSolicitacoes((prev) => prev.filter((s) => s.id !== id));
-
-    // 4. Toast
-    setToast({
-      type: "success",
-      message: `✅ Solicitação aprovada! Equipamento "${solicitacao.equipamentoNome}" movido para Em uso.`,
-    });
+    setToast({ type: "success", message: `✅ Solicitação aprovada! Equipamento "${solicitacao.equipamentoNome}" movido para Em uso.` });
   };
 
   const recusarSolicitacao = (id) => {
     setSolicitacoes((prev) => prev.filter((s) => s.id !== id));
-    setToast({
-      type: "danger",
-      message: "❌ Solicitação recusada com sucesso.",
-    });
+    setToast({ type: "danger", message: "❌ Solicitação recusada com sucesso." });
   };
 
-  // --- NOVA FUNÇÃO PARA DEVOLVER EQUIPAMENTO ---
   const devolverEquipamento = (loanId) => {
-    // 1. Encontra o item em uso (empréstimo)
     const itemEmUso = emUso.find((e) => e.id === loanId);
     if (!itemEmUso) return;
-
-    // 2. Atualiza o status na lista principal de equipamentos
-    setEquipamentos((prev) =>
-      prev.map((eq) =>
-        eq.id === itemEmUso.equipamentoId
-          ? { ...eq, status: "Disponível" } // Define o status como "Disponível"
-          : eq
-      )
-    );
-
-    // 3. Remove o item da lista "Em Uso"
+    setEquipamentos((prev) => prev.map((eq) => eq.id === itemEmUso.equipamentoId ? { ...eq, status: "Disponível" } : eq));
     setEmUso((prev) => prev.filter((e) => e.id !== loanId));
-
-    // 4. Toast
-    setToast({
-      type: "success",
-      message: `✅ Equipamento "${itemEmUso.equipamentoNome}" devolvido com sucesso!`,
-    });
+    setToast({ type: "success", message: `✅ Equipamento "${itemEmUso.equipamentoNome}" devolvido com sucesso!` });
   };
 
   const fecharToast = () => setToast(null);
 
-  // A tag <main> foi movida para fora e o py-4 removido
+  // -----------------------------------------------------------------
+  // ALTERAÇÕES RESPONSIVAS NO HEADER ABAIXO (USANDO CLASSES BOOTSTRAP)
+  // -----------------------------------------------------------------
   return (
     <>
       <header
         className="border-bottom shadow-sm position-sticky top-0 z-3"
         style={{
-          // --- GRADIENTE DO HEADER ATUALIZADO ---
-          background:
-            "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))",
+          background: "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))",
           color: "white",
         }}
       >
-        <div className="container-fluid px-4 py-3 d-flex justify-content-between align-items-center">
+        {/* Alterado px-4 para px-3 (mobile) e px-md-4 (desktop) */}
+        <div className="container-fluid px-3 px-md-4 py-3 d-flex justify-content-between align-items-center">
+
           {/* ===== LOGO + TÍTULO ===== */}
-          <div className="d-flex align-items-center gap-3">
+          {/* gap-2 no mobile, gap-md-3 no desktop para economizar espaço */}
+          <div className="d-flex align-items-center gap-2 gap-md-3">
             <div
               className="d-flex align-items-center justify-content-center rounded-circle"
               style={{
@@ -423,28 +309,32 @@ export default function PagAdmin() {
                 height: "48px",
                 background: "rgba(255,255,255,0.15)",
                 boxShadow: "0 0 10px rgba(255,255,255,0.2)",
-                animation: "pulse 2s infinite", // A animação agora vem do CSS
+                animation: "pulse 2s infinite",
+                flexShrink: 0, // Garante que o logo não amasse
               }}
             >
-              {/* Ícone substituído por um do react-icons */}
               <FaTools size={24} className="text-white" />
             </div>
 
             <div>
-              <h1 className="h5 fw-bold mb-1">Equipamentos - GA</h1>
-              <p className="small text-light opacity-75 mb-0">
+              {/* h5 levemente menor em mobile se necessário, mas mantive o padrão */}
+              <h1 className="h5 fw-bold mb-1 text-nowrap">Equipamentos - GA</h1>
+
+              {/* ADICIONADO: d-none d-md-block */}
+              {/* Oculta este texto em telas pequenas (mobile) e mostra em médias/grandes */}
+              <p className="small text-light opacity-75 mb-0 d-none d-md-block">
                 Painel de Administração
               </p>
             </div>
           </div>
 
-          {/* --- DROPDOWN AGORA TEM A REF --- */}
+          {/* --- DROPDOWN --- */}
           <div className="dropdown text-center position-relative" ref={menuRef}>
             <button
               className="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill px-3 py-2 user-menu-button"
               id="userMenu"
-              aria-expanded={isMenuOpen} // Controlado pelo React
-              onClick={() => setIsMenuOpen(!isMenuOpen)} // Abre/fecha o menu
+              aria-expanded={isMenuOpen}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <img
                 src="https://ui-avatars.com/api/?name=ADM&background=0d6efd&color=fff"
@@ -453,44 +343,34 @@ export default function PagAdmin() {
                 width="32"
                 height="32"
               />
-              <span className="fw-semibold">Administrador</span>
-              {/* Ícone substituído */}
+              {/* ADICIONADO: d-none d-md-block */}
+              {/* Oculta o texto "Administrador" no celular, deixando só o avatar */}
+              <span className="fw-semibold d-none d-md-block">Administrador</span>
+
               <FaChevronDown />
             </button>
 
-            {/* --- MENU DROPDOWN AGORA CONTROLADO PELO REACT --- */}
             <ul
-              className={`dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu ${isMenuOpen ? "show" : "" // Adiciona a classe 'show' se isMenuOpen for true
+              className={`dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu ${isMenuOpen ? "show" : ""
                 }`}
               aria-labelledby="userMenu"
+              // Força o menu a não estourar a tela no mobile alinhando à direita se preciso
+              style={{ minWidth: "200px" }}
             >
+              <li><h6 className="dropdown-header text-muted">Perfil</h6></li>
               <li>
-                <h6 className="dropdown-header text-muted">Perfil</h6>
-              </li>
-              <li>
-                <button
-                  className="dropdown-item d-flex align-items-center gap-2"
-                // onClick removido para evitar erro de 'router'
-                >
+                <button className="dropdown-item d-flex align-items-center gap-2">
                   <FaUserCircle /> Meu Perfil
                 </button>
               </li>
               <li>
-                <button
-                  className="dropdown-item d-flex align-items-center gap-2 mt-1"
-                // onClick removido
-                >
+                <button className="dropdown-item d-flex align-items-center gap-2 mt-1">
                   <FaCog /> Configurações
                 </button>
               </li>
+              <li><hr className="dropdown-divider" /></li>
               <li>
-                <hr className="dropdown-divider" />
-              </li>
-              <li>
-                <button
-                  className="dropdown-item text-danger d-flex align-items-center gap-2"
-                // onClick removido
-                >
+                <button className="dropdown-item text-danger d-flex align-items-center gap-2">
                   <FaSignOutAlt /> Sair
                 </button>
               </li>
@@ -499,166 +379,156 @@ export default function PagAdmin() {
         </div>
       </header>
 
-      {/* A tag <main> agora começa AQUI, sem py-4 */}
+      {/* ... Restante do Main e Modal iguais ... */}
       <main className="pagadmin-container container-fluid">
-        {/* Toast de confirmação */}
         {toast && (
           <div className="toast-container position-fixed top-0 end-0 p-3">
-            <div
-              className={`toast show align-items-center text-bg-${toast.type === "success" ? "success" : "danger"
-                } border-0`}
-              role="alert"
-            >
+            <div className={`toast show align-items-center text-bg-${toast.type === "success" ? "success" : "danger"} border-0`} role="alert">
               <div className="d-flex">
                 <div className="toast-body">{toast.message}</div>
-                <button
-                  type="button"
-                  className="btn-close btn-close-white me-2 m-auto"
-                  onClick={fecharToast}
-                ></button>
+                <button type="button" className="btn-close btn-close-white me-2 m-auto" onClick={fecharToast}></button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Painel superior */}
         <div className="row mb-4 gx-3">
+
           <div className="col-lg-8">
+
             <div className="overview-panel p-3 d-flex align-items-center gap-3">
+
               <div className="brand-badge">
+
                 <FaTools size={28} />
+
               </div>
+
               <div className="flex-grow-1">
+
                 <h3 className="mb-0">Painel de Controle — Equipamentos GA</h3>
+
                 <p className="mb-0 small text-muted">
+
                   Gerencie equipamentos, solicitações e ferramentas em uso.
+
                 </p>
+
               </div>
+
               <div className="d-flex gap-2">
+
                 <button
+
                   className="btn btn-primary-solid"
+
                   onClick={() => abrirModal("novoEquip")} // Abre o modal em modo "novo"
+
                 >
+
                   <FaBoxes className="me-1" /> Novo Equipamento
+
                 </button>
+
               </div>
+
             </div>
+
           </div>
+
+
 
           <div className="col-lg-4">
+
             <div className="stats-panel p-3">
+
               {/* Agora com 3 itens, o 'justify-content-between' 
-                vai distribuir eles igualmente (um na esquerda, um no centro, um na direita)
-              */}
+
+      vai distribuir eles igualmente (um na esquerda, um no centro, um na direita)
+
+    */}
+
               <div className="d-flex justify-content-between align-items-center">
 
+
+
                 {/* Item 1: Equipamentos */}
+
                 <div className="text-center"> {/* Alinhado ao centro */}
+
                   <small className="text-muted">Equipamentos</small>
+
                   <h4 className="mb-0">{equipamentos.length}</h4>
+
                 </div>
+
+
 
                 {/* Item 2: Em Uso (NOVO) */}
+
                 <div className="text-center">
+
                   <small className="text-muted">Em Uso</small>
+
                   {/* Puxa a contagem da lista 'emUso' */}
+
                   <h4 className="mb-0">{emUso.length}</h4>
+
                 </div>
+
+
 
                 {/* Item 3: Solicitações */}
+
                 <div className="text-center"> {/* Alinhado ao centro */}
+
                   <small className="text-muted">Solicitações</small>
+
                   <h4 className="mb-0">{solicitacoes.length}</h4>
+
                 </div>
 
+
+
               </div>
+
             </div>
+
           </div>
+
         </div>
 
-        {/* NAV ABAS */}
-        <nav className="nav-dashboard mb-3">
-          <button
-            className={`tab ${abaAtiva === "equipamentos" ? "active" : ""}`}
-            onClick={() => setAbaAtiva("equipamentos")}
-          >
+        <nav className="nav-dashboard mb-3 overflow-auto flex-nowrap">
+          <button className={`tab ${abaAtiva === "equipamentos" ? "active" : ""}`} onClick={() => setAbaAtiva("equipamentos")}>
             <FaTools className="me-2" /> Equipamentos
           </button>
-          <button
-            className={`tab ${abaAtiva === "solicitacoes" ? "active" : ""}`}
-            onClick={() => setAbaAtiva("solicitacoes")}
-          >
+          <button className={`tab ${abaAtiva === "solicitacoes" ? "active" : ""}`} onClick={() => setAbaAtiva("solicitacoes")}>
             <FaClipboardList className="me-2" /> Solicitações
           </button>
-          <button
-            className={`tab ${abaAtiva === "emuso" ? "active" : ""}`}
-            onClick={() => setAbaAtiva("emuso")}
-          >
+          <button className={`tab ${abaAtiva === "emuso" ? "active" : ""}`} onClick={() => setAbaAtiva("emuso")}>
             <FaBoxes className="me-2" /> Em Uso
           </button>
         </nav>
 
-        {/* ABAS DE CONTEÚDO */}
         <div className="row">
-          {/* EQUIPAMENTOS */}
           {abaAtiva === "equipamentos" && (
             <div className="col-12">
               <div className="row g-4">
                 {equipamentos.map((eq) => (
                   <div className="col-md-6 col-lg-4" key={eq.id}>
                     <article className="card-card h-100">
-                      <div
-                        className="card-top"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))",
-                        }}
-                      >
-                        <div className="card-icon">
-                          <FaBoxes size={28} />
-                        </div>
-                        <div className="card-quick">
-                          <small className="text-light d-block mt-1">
-                            {eq.categoria} · {eq.codigo}
-                          </small>
-                        </div>
+                      <div className="card-top" style={{ background: "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))" }}>
+                        <div className="card-icon"><FaBoxes size={28} /></div>
+                        <div className="card-quick"><small className="text-light d-block mt-1">{eq.categoria} · {eq.codigo}</small></div>
                       </div>
-
                       <div className="card-body p-3">
                         <h5 className="card-title mb-1">{eq.nome}</h5>
-
-                        {/* ===== NOVO BADGE DE STATUS ===== */}
-                        <span
-                          className={`badge ${eq.status === "Disponível"
-                            ? "bg-success"
-                            : eq.status === "Em Uso"
-                              ? "bg-warning text-dark"
-                              : "bg-danger"
-                            }`}
-                        >
-                          {eq.status}
-                        </span>
-
-                        <p className="text-muted small mb-2 mt-2">
-                          <FaInfoCircle className="me-1" /> Local:{" "}
-                          <strong>{eq.local}</strong>
-                        </p>
-
+                        <span className={`badge ${eq.status === "Disponível" ? "bg-success" : eq.status === "Em Uso" ? "bg-warning text-dark" : "bg-danger"}`}>{eq.status}</span>
+                        <p className="text-muted small mb-2 mt-2"><FaInfoCircle className="me-1" /> Local: <strong>{eq.local}</strong></p>
                         <div className="d-flex justify-content-between align-items-center mt-3">
                           <div className="actions">
-                            <button
-                              className="btn btn-sm btn-outline"
-                              title="Editar"
-                              onClick={() => abrirModal("editarEquip", eq)} // Abre o modal em modo "editar"
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              className="btn btn-sm btn-danger ms-2"
-                              onClick={() => excluirEquipamento(eq.id)}
-                            >
-                              <FaTimes />
-                            </button>
+                            <button className="btn btn-sm btn-outline" title="Editar" onClick={() => abrirModal("editarEquip", eq)}><FaEdit /></button>
+                            <button className="btn btn-sm btn-danger ms-2" onClick={() => excluirEquipamento(eq.id)}><FaTimes /></button>
                           </div>
                         </div>
                       </div>
@@ -669,40 +539,24 @@ export default function PagAdmin() {
             </div>
           )}
 
-          {/* SOLICITAÇÕES */}
           {abaAtiva === "solicitacoes" && (
             <div className="col-12">
               <div className="row g-4">
                 {solicitacoes.map((s) => (
                   <div className="col-md-6" key={s.id}>
                     <div className="request-card p-3">
-                      <div className="d-flex justify-content-between">
+                      <div className="d-flex justify-content-between flex-column flex-sm-row">
                         <div>
-                          {/* Usa equipamentoNome */}
                           <h6 className="mb-1">{s.equipamentoNome}</h6>
-                          <small className="text-muted">
-                            Solicitante: {s.usuario} · {s.local}
-                          </small>
+                          <small className="text-muted">Solicitante: {s.usuario} · {s.local}</small>
                         </div>
-                        <div className="text-end">
-                          <span className="badge bg-warning text-dark">
-                            {s.status}
-                          </span>
+                        <div className="text-start text-sm-end mt-2 mt-sm-0">
+                          <span className="badge bg-warning text-dark">{s.status}</span>
                         </div>
                       </div>
                       <div className="mt-3 d-flex gap-2">
-                        <button
-                          className="btn btn-success"
-                          onClick={() => aprovarSolicitacao(s.id)}
-                        >
-                          <FaCheck /> Aprovar
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => recusarSolicitacao(s.id)}
-                        >
-                          <FaTimes /> Recusar
-                        </button>
+                        <button className="btn btn-success" onClick={() => aprovarSolicitacao(s.id)}><FaCheck /> Aprovar</button>
+                        <button className="btn btn-danger" onClick={() => recusarSolicitacao(s.id)}><FaTimes /> Recusar</button>
                       </div>
                     </div>
                   </div>
@@ -711,37 +565,20 @@ export default function PagAdmin() {
             </div>
           )}
 
-          {/* EM USO */}
           {abaAtiva === "emuso" && (
             <div className="col-12">
               <div className="row g-4">
                 {emUso.map((e) => (
                   <div className="col-md-6 col-lg-4" key={e.id}>
-                    {/* Classes de flex para alinhar o botão no final */}
                     <div className="request-card p-3 h-100 d-flex flex-column justify-content-between">
                       <div>
-                        {/* Usa equipamentoNome */}
                         <h6 className="mb-1">{e.equipamentoNome}</h6>
-                        <p className="text-muted small mb-2">
-                          <FaInfoCircle className="me-1" /> Responsável:{" "}
-                          <strong>{e.usuario}</strong>
-                        </p>
-                        <p className="text-muted small mb-0">
-                          Local: <strong>{e.local}</strong>
-                        </p>
-                        <p className="text-muted small">
-                          Desde: <strong>{e.dataInicio}</strong>
-                        </p>
+                        <p className="text-muted small mb-2"><FaInfoCircle className="me-1" /> Responsável: <strong>{e.usuario}</strong></p>
+                        <p className="text-muted small mb-0">Local: <strong>{e.local}</strong></p>
+                        <p className="text-muted small">Desde: <strong>{e.dataInicio}</strong></p>
                       </div>
-
-                      {/* ===== NOVO BOTÃO DE DEVOLVER ===== */}
                       <div>
-                        <button
-                          className="btn btn-outline-secondary w-100 mt-3"
-                          onClick={() => devolverEquipamento(e.id)}
-                        >
-                          Devolver Equipamento
-                        </button>
+                        <button className="btn btn-outline-secondary w-100 mt-3" onClick={() => devolverEquipamento(e.id)}>Devolver Equipamento</button>
                       </div>
                     </div>
                   </div>
@@ -751,29 +588,14 @@ export default function PagAdmin() {
           )}
         </div>
 
-        {/* MODAL MODIFICADO */}
         {modalOpen && (
           <div className="pagmodal-backdrop" onClick={fecharModal}>
             <div className="pagmodal" onClick={(e) => e.stopPropagation()}>
               <div className="pagmodal-header">
-                <h5 className="mb-0">
-                  {modalData?.tipo === "editarEquip"
-                    ? "Editar Equipamento"
-                    : "Novo Equipamento"}
-                </h5>
-                <button
-                  className="btn-close"
-                  onClick={fecharModal}
-                ></button>
+                <h5 className="mb-0">{modalData?.tipo === "editarEquip" ? "Editar Equipamento" : "Novo Equipamento"}</h5>
+                <button className="btn-close" onClick={fecharModal}></button>
               </div>
-
-              {/* O formulário é renderizado aqui */}
-              {/* Ele recebe as funções e os dados iniciais */}
-              <FormEquipamento
-                onSave={salvarEquipamento}
-                onCancel={fecharModal}
-                initialData={modalData?.item}
-              />
+              <FormEquipamento onSave={salvarEquipamento} onCancel={fecharModal} initialData={modalData?.item} />
             </div>
           </div>
         )}
