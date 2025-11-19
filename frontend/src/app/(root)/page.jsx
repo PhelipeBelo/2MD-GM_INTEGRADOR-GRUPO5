@@ -69,7 +69,7 @@ export default function LoginPage() {
             return;
         }
 
-        if (employee.tipo == 'ADM') {
+        if (employee.tipo == 'admin') {
             router.push('/admPage');
         } else {
             router.push('/glPage');
@@ -171,15 +171,121 @@ export default function LoginPage() {
             <div className={styles.formPanelRight}></div>
 
             <div className={styles.overlayContainer}>
+
+
+
                 <div className={styles.overlayPanelLeft}>
-                    <h1 className="fw-bold">Bem Vindo de Volta!</h1>
+                    <h1 className="fw-bold">Bem Vindo!</h1>
+
+                    {/* Wrapper para a Animação */}
+                    <div className={styles.factoryWrapper}>
+
+                        {/* SVG da Fábrica da GM (com torre d'água na posição da chaminé) */}
+                        <svg className={styles.factorySvg} viewBox="0 0 450 250">
+                            <g fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                                {/* Estrutura principal da fábrica */}
+                                <rect id="factory-main" x="20" y="120" width="300" height="100" />
+                                {/* Telhado */}
+                                <path id="factory-roof" d="M20 120 L320 120 M20 120 L170 80 L320 120" />
+                                
+                                {/* Janelas */}
+                                <rect id="window1" x="50" y="140" width="30" height="40" />
+                                <rect id="window2" x="100" y="140" width="30" height="40" />
+                                <rect id="window3" x="150" y="140" width="30" height="40" />
+                                <rect id="window4" x="200" y="140" width="30" height="40" />
+                                <rect id="window5" x="250" y="140" width="30" height="40" />
+                                
+                                {/* RESERVATÓRIO DE ÁGUA NA POSIÇÃO DA CHAMINÉ */}
+                                <rect id="water-tower-post-body" x="280" y="80" width="30" height="40" />
+                                <circle id="water-tower-tank" cx="295" cy="50" r="30" />
+                                <text id="gm-logo-text" x="295" y="58" textAnchor="middle" fontSize="18" fill="#fff" stroke="none" style={{fontWeight: 'bold'}}>GM</text>
+                            </g>
+                        </svg>
+
+                        {/* SVG da Logo Chevrolet (AGORA EXATAMENTE COMO NA IMAGEM) */}
+                        <svg className={styles.chevyLogo} viewBox="0 0 200 100">
+                            <defs>
+                                {/* Gradiente para o efeito cromado nas bordas */}
+                                <linearGradient id="chromeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stopColor="#E0E0E0"/>
+                                    <stop offset="25%" stopColor="#B0B0B0"/>
+                                    <stop offset="50%" stopColor="#808080"/>
+                                    <stop offset="75%" stopColor="#B0B0B0"/>
+                                    <stop offset="100%" stopColor="#E0E0E0"/>
+                                </linearGradient>
+
+                                {/* Gradiente para o efeito dourado no centro */}
+                                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stopColor="#FFD700"/>
+                                    <stop offset="50%" stopColor="#C0A000"/>
+                                    <stop offset="100%" stopColor="#FFD700"/>
+                                </linearGradient>
+
+                                {/* Padrão para a textura de pontos dourada */}
+                                <pattern id="goldDots" patternUnits="userSpaceOnUse" width="4" height="4">
+                                    <circle cx="1.5" cy="1.5" r="0.5" fill="#8B6508" opacity="0.3"/>
+                                </pattern>
+                            </defs>
+                            
+                            <g>
+                                {/* Contorno externo da gravata (cromado) */}
+                                <path 
+                                    id="chevy-outer-shape" 
+                                    d="M20 45 L50 15 L150 15 L180 45 L150 75 L50 75 Z"
+                                    fill="url(#chromeGradient)" 
+                                    stroke="none"
+                                    opacity="0"
+                                />
+
+                                {/* Parte interna dourada (base) */}
+                                <path 
+                                    id="chevy-inner-gold-base" 
+                                    d="M28 45 L53 22 L147 22 L172 45 L147 68 L53 68 Z"
+                                    fill="url(#goldGradient)" 
+                                    stroke="none"
+                                    opacity="0"
+                                />
+
+                                {/* Camada de textura dourada */}
+                                <path 
+                                    id="chevy-inner-gold-texture" 
+                                    d="M28 45 L53 22 L147 22 L172 45 L147 68 L53 68 Z"
+                                    fill="url(#goldDots)" 
+                                    stroke="none"
+                                    opacity="0"
+                                />
+
+                                {/* Linhas de brilho/sombra para dar mais volume (parte cromada) */}
+                                <path 
+                                    id="chevy-highlight-top" 
+                                    d="M20 45 L50 15 L150 15 L180 45" 
+                                    fill="none" 
+                                    stroke="#FFFFFF" 
+                                    strokeWidth="1.5" 
+                                    strokeOpacity="0.8"
+                                    opacity="0"
+                                />
+                                <path 
+                                    id="chevy-highlight-bottom" 
+                                    d="M20 45 L50 75 L150 75 L180 45" 
+                                    fill="none" 
+                                    stroke="#505050" 
+                                    strokeWidth="1.5" 
+                                    strokeOpacity="0.8"
+                                    opacity="0"
+                                />
+
+                            </g>
+                        </svg>
+                    </div>
+
                     <button
                         className="btn btn-outline-light btn-lg mt-3"
                         onClick={handleLoginClick}>
                         Entrar
                     </button>
                 </div>
-                <div className={styles.overlayPanelRight}></div>
+
             </div>
 
         </main>
