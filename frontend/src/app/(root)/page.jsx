@@ -70,9 +70,9 @@ export default function LoginPage() {
         }
 
         if (employee.tipo == 'ADM') {
-            router.push('/admPage');
+            router.push('/adm');
         } else {
-            router.push('/glPage');
+            router.push('/gl');
         }
     };
 
