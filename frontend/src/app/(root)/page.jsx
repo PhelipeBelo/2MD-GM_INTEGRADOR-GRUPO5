@@ -69,7 +69,7 @@ export default function LoginPage() {
             return;
         }
 
-        if (employee.tipo == 'ADM') {
+        if (employee.tipo == 'admin') {
             router.push('/adm');
         } else {
             router.push('/gl');
