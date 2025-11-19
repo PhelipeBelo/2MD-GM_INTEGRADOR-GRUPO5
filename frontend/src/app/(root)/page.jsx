@@ -138,7 +138,7 @@ export default function LoginPage() {
 
                         {!isLoading && !employee && !error && (
                             <div className="text-muted small">
-                                Digite seu GMIN e clique fora para buscar.
+                                Digite seu Registro e clique fora para buscar.
                             </div>
                         )}
                     </div>
