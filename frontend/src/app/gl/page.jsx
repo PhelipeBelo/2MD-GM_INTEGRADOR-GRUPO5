@@ -164,7 +164,7 @@ export default function PagGL() {
               <FaBoxOpen size={24} className="text-white" />
             </div>
             <div>
-              <h1 className="h5 fw-bold mb-1 text-nowrap">Portal do Colaborador</h1>
+              <h1 className="h5 fw-bold mb-1 text-nowrap">Equipamentos - GA</h1>
               <p className="small text-light opacity-75 mb-0 d-none d-md-block">
                 Solicitação de Equipamentos
               </p>
@@ -192,8 +192,8 @@ export default function PagGL() {
               className={`dropdown-menu shadow-sm border-0 p-2 end-0 margem_menu ${isMenuOpen ? "show" : ""}`}
               style={{ minWidth: "200px", right: 0, left: "auto" }}
             >
-              <li><h6 className="dropdown-header text-muted">Minha Conta</h6></li>
-              <li><button className="dropdown-item gap-2 d-flex align-items-center"><FaUserCircle /> Meus Dados</button></li>
+              <li><h6 className="dropdown-header text-muted">Perfil</h6></li>
+              <li><button className="dropdown-item gap-2 d-flex align-items-center"><FaUserCircle /> Meu Perfil</button></li>
               <li><hr className="dropdown-divider" /></li>
               <li><button className="dropdown-item text-danger gap-2 d-flex align-items-center"><FaSignOutAlt /> Sair</button></li>
             </ul>
@@ -266,12 +266,12 @@ export default function PagGL() {
                     <div className="col-md-6 col-lg-4" key={eq.id}>
                       <article className="card-card h-100 d-flex flex-column">
                         <div className="card-top" style={{ background: "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))" }}>
-                           <div className="d-flex justify-content-between w-100 align-items-center"> {/* Adicionado align-items-center */}
-                              <FaBoxOpen size={24} />
-                              {/* Badge Verde e centralizado verticalmente */}
-                              <span className="badge bg-success bg-opacity-75 text-white border border-light border-opacity-25 py-2 px-3 rounded-pill">Disponível</span>
-                           </div>
-                           <small className="text-light mt-2 opacity-75">{eq.codigo}</small>
+                          <div className="d-flex justify-content-between w-100 align-items-center"> {/* Adicionado align-items-center */}
+                            <FaBoxOpen size={24} />
+                            {/* Badge Verde e centralizado verticalmente */}
+                            <span className="badge bg-success bg-opacity-75 text-white border border-light border-opacity-25 py-2 px-3 rounded-pill">Disponível</span>
+                          </div>
+                          <small className="text-light mt-2 opacity-75">{eq.codigo}</small>
                         </div>
                         <div className="card-body p-3 flex-grow-1 d-flex flex-column justify-content-between">
                           <div>
@@ -302,18 +302,18 @@ export default function PagGL() {
                 <div className="row g-4">
                   {meusEmprestimos.map((eq) => (
                     <div className="col-md-6 col-lg-4" key={eq.id}>
-                      <div className="request-card p-3 h-100 border-primary border-opacity-25" style={{background: "#f8fbff"}}>
+                      <div className="request-card p-3 h-100 border-primary border-opacity-25" style={{ background: "#f8fbff" }}>
                         <div className="d-flex justify-content-between align-items-start mb-3">
-                           <h6 className="mb-0 fw-bold text-primary">{eq.nome}</h6>
-                           <span className="badge bg-primary">Em Uso</span>
+                          <h6 className="mb-0 fw-bold text-primary">{eq.nome}</h6>
+                          <span className="badge bg-primary">Em Uso</span>
                         </div>
                         <div className="small text-muted space-y-2">
-                           <p className="mb-1"><FaInfoCircle className="me-1"/> Código: {eq.codigo}</p>
-                           <p className="mb-1"><FaHistory className="me-1"/> Retirado em: {eq.dataRetirada}</p>
-                           <p className="mb-0"><FaSearch className="me-1"/> Local: {eq.local}</p>
+                          <p className="mb-1"><FaInfoCircle className="me-1" /> Código: {eq.codigo}</p>
+                          <p className="mb-1"><FaHistory className="me-1" /> Retirado em: {eq.dataRetirada}</p>
+                          <p className="mb-0"><FaSearch className="me-1" /> Local: {eq.local}</p>
                         </div>
                         <div className="mt-3 pt-3 border-top text-center">
-                           <small className="text-muted fst-italic">Para devolver, procure o almoxarifado.</small>
+                          <small className="text-muted fst-italic">Para devolver, procure o almoxarifado.</small>
                         </div>
                       </div>
                     </div>
@@ -334,8 +334,8 @@ export default function PagGL() {
                         <div className={`rounded-circle p-2 d-flex align-items-center justify-content-center
                           ${sol.status === 'Aprovado' ? 'bg-success bg-opacity-10 text-success' :
                             sol.status === 'Recusado' ? 'bg-danger bg-opacity-10 text-danger' :
-                            'bg-warning bg-opacity-10 text-warning'}`}
-                          style={{width: 40, height: 40}}
+                              'bg-warning bg-opacity-10 text-warning'}`}
+                          style={{ width: 40, height: 40 }}
                         >
                           {sol.status === 'Aprovado' ? <FaCheckCircle /> : sol.status === 'Recusado' ? <FaTools /> : <FaHistory />}
                         </div>
@@ -345,12 +345,12 @@ export default function PagGL() {
                         </div>
                       </div>
                       <div className="text-end">
-                         <span className={`badge rounded-pill
+                        <span className={`badge rounded-pill
                             ${sol.status === 'Aprovado' ? 'bg-success' :
-                              sol.status === 'Recusado' ? 'bg-danger' :
+                            sol.status === 'Recusado' ? 'bg-danger' :
                               'bg-warning text-dark'}`}>
-                            {sol.status}
-                         </span>
+                          {sol.status}
+                        </span>
                       </div>
                     </div>
                   </div>
