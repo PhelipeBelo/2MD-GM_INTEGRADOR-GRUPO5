@@ -16,6 +16,7 @@ import {
   FaChevronDown,
   FaArrowRight
 } from "react-icons/fa";
+import Link from "next/link";
 
 // -----------------------------------------------------------------
 // 1. COMPONENTE MODAL DE SOLICITAÇÃO
@@ -193,7 +194,7 @@ export default function PagGL() {
               style={{ minWidth: "200px", right: 0, left: "auto" }}
             >
               <li><h6 className="dropdown-header text-muted">Perfil</h6></li>
-              <li><button className="dropdown-item gap-2 d-flex align-items-center"><FaUserCircle /> Meu Perfil</button></li>
+              <li><Link className="text-none" href={"./perfil"}><button className="dropdown-item gap-2 d-flex align-items-center"><FaUserCircle /> Meu Perfil</button></Link></li>
               <li><hr className="dropdown-divider" /></li>
               <li><button className="dropdown-item text-danger gap-2 d-flex align-items-center"><FaSignOutAlt /> Sair</button></li>
             </ul>

@@ -16,6 +16,7 @@ import {
   FaSignOutAlt,
   FaChevronDown,
 } from "react-icons/fa";
+import Link from "next/link";
 
 // -----------------------------------------------------------------
 // 1. COMPONENTE DO FORMULÁRIO (MODIFICADO)
@@ -359,9 +360,10 @@ export default function PagAdmin() {
             >
               <li><h6 className="dropdown-header text-muted">Perfil</h6></li>
               <li>
-                <button className="dropdown-item d-flex align-items-center gap-2">
+                <Link className="text-none" href={"./perfil"}><button className="dropdown-item d-flex align-items-center gap-2">
                   <FaUserCircle /> Meu Perfil
                 </button>
+                </Link>
               </li>
               <li><hr className="dropdown-divider" /></li>
               <li>

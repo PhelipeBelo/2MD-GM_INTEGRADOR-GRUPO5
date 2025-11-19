@@ -352,3 +352,7 @@
       transform: none !important;
   }
 }
+
+.text-none{
+  text-decoration: none;
+}
