@@ -2,7 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./pagPerfil.css"; // Usa o CSS unificado
+import "./pagPerfil.css";
+import { useRouter } from 'next/navigation';
+
 import {
     FaUserCircle,
     FaSignOutAlt,
@@ -17,24 +19,45 @@ import {
 } from "react-icons/fa";
 
 export default function PagPerfil() {
-    // Dados do usuário (Somente Leitura)
-    const user = {
-        nome: "Phelipe Belo",
-        id: "GL-8842",
-        cargo: "Gestor Local",
-        email: "phelipe.belo@gmail.com",
-        telefone: "(11) 99876-5432",
-        nascimento: "09/04/1980",
-        setor: "Manutenção - Setor B",
-        pais: "Brasil",
-        foto: "https://ui-avatars.com/api/?name=Phelipe+Belo&background=0d6efd&color=fff&size=128"
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [user, setUser] = useState(null); // Estado inicial nulo
+    const menuRef = useRef(null);
+    const router = useRouter();
+
+    // Função para formatar a data do banco (YYYY-MM-DD) para o visual (DD/MM/YYYY)
+    const formatarData = (dataString) => {
+        if (!dataString) return "Não informado";
+        const data = new Date(dataString);
+        return data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
     };
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const menuRef = useRef(null);
-
-    // Fecha o menu ao clicar fora
     useEffect(() => {
+        // 1. Puxar os dados salvos no localStorage pelo Login
+        const usuarioSalvo = localStorage.getItem('usuario');
+        const token = localStorage.getItem('token');
+
+        if (!token || !usuarioSalvo) {
+            // Se não tiver logado, manda de volta pro login
+            router.push('/'); 
+            return;
+        }
+
+        const dadosBanco = JSON.parse(usuarioSalvo);
+
+        // 2. Mapear os dados do Banco (gl_ga) para a estrutura visual da tela
+        setUser({
+            nome: dadosBanco.nome,
+            id: dadosBanco.gmin,         // Mapeando 'gmin' do banco para 'id' da tela
+            cargo: dadosBanco.cargo,
+            email: dadosBanco.cadastro || "Sem e-mail",
+            telefone: dadosBanco.telefone || "Sem telefone",
+            nascimento: formatarData(dadosBanco.nasc), // Formatando a data
+            setor: dadosBanco.area,      // Mapeando 'area' do banco para 'setor' da tela
+            planta: dadosBanco.planta,     // Mapeando 'planta' do banco para o campo visual (rótulo é Planta)
+            foto: dadosBanco.icon || `https://ui-avatars.com/api/?name=${encodeURIComponent(dadosBanco.nome)}&background=0d6efd&color=fff&size=128` // Fallback se não tiver ícone
+        });
+
+        // Lógica de fechar menu ao clicar fora
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setIsMenuOpen(false);
@@ -42,7 +65,16 @@ export default function PagPerfil() {
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [menuRef]);
+    }, [router]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        router.push('/');
+    };
+
+    // Enquanto carrega os dados do localStorage, não exibe nada (ou poderia ser um spinner)
+    if (!user) return null;
 
     return (
         <>
@@ -56,7 +88,10 @@ export default function PagPerfil() {
             >
                 <div className="container-fluid px-3 px-md-4 py-3 d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center gap-3">
-                        <button className="btn btn-sm btn-outline-light border-0 rounded-circle p-2 d-flex align-items-center justify-content-center">
+                        <button 
+                            onClick={() => router.back()} 
+                            className="btn btn-sm btn-outline-light border-0 rounded-circle p-2 d-flex align-items-center justify-content-center"
+                        >
                             <FaArrowLeft />
                         </button>
                         <div>
@@ -76,6 +111,7 @@ export default function PagPerfil() {
                                 className="rounded-circle border border-light"
                                 width="32"
                                 height="32"
+                                style={{ objectFit: 'cover' }}
                             />
                             <span className="fw-semibold d-none d-md-block">{user.nome}</span>
                             <FaChevronDown />
@@ -87,7 +123,14 @@ export default function PagPerfil() {
                         >
                             <li><button className="dropdown-item gap-2 d-flex align-items-center active"><FaUserCircle /> Meus Dados</button></li>
                             <li><hr className="dropdown-divider" /></li>
-                            <li><button className="dropdown-item text-danger gap-2 d-flex align-items-center"><FaSignOutAlt /> Sair</button></li>
+                            <li>
+                                <button 
+                                    className="dropdown-item text-danger gap-2 d-flex align-items-center"
+                                    onClick={handleLogout}
+                                >
+                                    <FaSignOutAlt /> Sair
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -110,8 +153,7 @@ export default function PagPerfil() {
                         {/* Seção 1: Avatar e Nome */}
                         <div className="profile-header-section">
                             <div className="avatar-container">
-                                {/* Removido botão de câmera */}
-                                <img src={user.foto} alt="Profile" className="avatar-img" />
+                                <img src={user.foto} alt="Profile" className="avatar-img" style={{objectFit: 'cover'}} />
                             </div>
                             <div className="flex-grow-1">
                                 <h2 className="h4 fw-bold mb-1">{user.nome}</h2>
@@ -132,7 +174,7 @@ export default function PagPerfil() {
                             </div>
 
                             <div className="info-row">
-                                <span className="info-label"><FaUserCircle className="me-2 opacity-50" /> Nome Completo</span>
+                                <span className="info-label"><FaUserCircle className="me-2 opacity-50" /> Nome</span>
                                 <span className="info-value text-end text-md-start">{user.nome}</span>
                             </div>
 
@@ -142,12 +184,12 @@ export default function PagPerfil() {
                             </div>
 
                             <div className="info-row">
-                                <span className="info-label"><FaGlobe className="me-2 opacity-50" /> País / Região</span>
-                                <span className="info-value text-end text-md-start">{user.pais}</span>
+                                <span className="info-label"><FaGlobe className="me-2 opacity-50" /> Planta</span>
+                                <span className="info-value text-end text-md-start">{user.planta}</span>
                             </div>
 
                             <div className="info-row">
-                                <span className="info-label"><FaLock className="me-2 opacity-50" /> Setor / Área</span>
+                                <span className="info-label"><FaLock className="me-2 opacity-50" /> Área</span>
                                 <span className="info-value text-end text-md-start">{user.setor}</span>
                             </div>
                         </div>

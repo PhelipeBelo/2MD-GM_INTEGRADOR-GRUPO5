@@ -70,9 +70,13 @@ export default function LoginPage() {
         }
 
         if (employee.tipo == 'admin') {
+<<<<<<< HEAD
             router.push('/admPage');
+=======
+            router.push('/adm');
+>>>>>>> 9f2ae48c9409f3191a6d3cf8f15fae5bf450b117
         } else {
-            router.push('/glPage');
+            router.push('/gl');
         }
     };
 

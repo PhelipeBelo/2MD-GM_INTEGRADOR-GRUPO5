@@ -363,11 +363,6 @@ export default function PagAdmin() {
                   <FaUserCircle /> Meu Perfil
                 </button>
               </li>
-              <li>
-                <button className="dropdown-item d-flex align-items-center gap-2 mt-1">
-                  <FaCog /> Configurações
-                </button>
-              </li>
               <li><hr className="dropdown-divider" /></li>
               <li>
                 <button className="dropdown-item text-danger d-flex align-items-center gap-2">
@@ -454,7 +449,7 @@ export default function PagAdmin() {
 
                 {/* Item 1: Equipamentos */}
 
-                <div className="text-center"> {/* Alinhado ao centro */}
+                <div className="text-center text-primary"> {/* Alinhado ao centro */}
 
                   <small className="text-muted">Equipamentos</small>
 
@@ -466,7 +461,7 @@ export default function PagAdmin() {
 
                 {/* Item 2: Em Uso (NOVO) */}
 
-                <div className="text-center">
+                <div className="text-center text-warning">
 
                   <small className="text-muted">Em Uso</small>
 
@@ -480,7 +475,7 @@ export default function PagAdmin() {
 
                 {/* Item 3: Solicitações */}
 
-                <div className="text-center"> {/* Alinhado ao centro */}
+                <div className="text-center text-danger"> {/* Alinhado ao centro */}
 
                   <small className="text-muted">Solicitações</small>
 
