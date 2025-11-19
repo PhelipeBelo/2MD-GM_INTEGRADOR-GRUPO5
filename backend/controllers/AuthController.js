@@ -69,7 +69,14 @@ class AuthController {
                         nome: usuario.nome,
                         gmin: usuario.gmin,
                         tipo: usuario.tipo,
-                        icon: usuario.icon
+                        icon: usuario.icon,
+                        nasc: usuario.nasc,
+                        cargo: usuario.cargo,
+                        planta: usuario.planta,
+                        cadastro: usuario.email,
+                        telefone: usuario.telefone,
+                        area: usuario.area,
+                        turno: usuario.turno
                     }
                 }
             });

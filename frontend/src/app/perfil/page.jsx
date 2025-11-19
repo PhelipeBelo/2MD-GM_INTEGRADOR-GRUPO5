@@ -49,11 +49,11 @@ export default function PagPerfil() {
             nome: dadosBanco.nome,
             id: dadosBanco.gmin,         // Mapeando 'gmin' do banco para 'id' da tela
             cargo: dadosBanco.cargo,
-            email: dadosBanco.email || "Sem e-mail",
+            email: dadosBanco.cadastro || "Sem e-mail",
             telefone: dadosBanco.telefone || "Sem telefone",
             nascimento: formatarData(dadosBanco.nasc), // Formatando a data
             setor: dadosBanco.area,      // Mapeando 'area' do banco para 'setor' da tela
-            pais: dadosBanco.planta,     // Mapeando 'planta' do banco para o campo visual (rótulo é Planta)
+            planta: dadosBanco.planta,     // Mapeando 'planta' do banco para o campo visual (rótulo é Planta)
             foto: dadosBanco.icon || `https://ui-avatars.com/api/?name=${encodeURIComponent(dadosBanco.nome)}&background=0d6efd&color=fff&size=128` // Fallback se não tiver ícone
         });
 
@@ -185,7 +185,7 @@ export default function PagPerfil() {
 
                             <div className="info-row">
                                 <span className="info-label"><FaGlobe className="me-2 opacity-50" /> Planta</span>
-                                <span className="info-value text-end text-md-start">{user.pais}</span>
+                                <span className="info-value text-end text-md-start">{user.planta}</span>
                             </div>
 
                             <div className="info-row">
