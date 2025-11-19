@@ -132,7 +132,7 @@ export default function PagPerfil() {
                             </div>
 
                             <div className="info-row">
-                                <span className="info-label"><FaUserCircle className="me-2 opacity-50" /> Nome Completo</span>
+                                <span className="info-label"><FaUserCircle className="me-2 opacity-50" /> Nome</span>
                                 <span className="info-value text-end text-md-start">{user.nome}</span>
                             </div>
 
@@ -142,12 +142,12 @@ export default function PagPerfil() {
                             </div>
 
                             <div className="info-row">
-                                <span className="info-label"><FaGlobe className="me-2 opacity-50" /> País / Região</span>
+                                <span className="info-label"><FaGlobe className="me-2 opacity-50" /> Planta</span>
                                 <span className="info-value text-end text-md-start">{user.pais}</span>
                             </div>
 
                             <div className="info-row">
-                                <span className="info-label"><FaLock className="me-2 opacity-50" /> Setor / Área</span>
+                                <span className="info-label"><FaLock className="me-2 opacity-50" /> Área</span>
                                 <span className="info-value text-end text-md-start">{user.setor}</span>
                             </div>
                         </div>
