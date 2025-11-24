@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./pagGl.css";
+import "./pagGl.css"; // Mantém seu CSS original intacto
+import { useRouter } from 'next/navigation'; // Adicionado para o redirecionamento
 import {
   FaTools,
   FaClipboardList,
@@ -19,7 +20,7 @@ import {
 import Link from "next/link";
 
 // -----------------------------------------------------------------
-// 1. COMPONENTE MODAL DE SOLICITAÇÃO
+// 1. COMPONENTE MODAL DE SOLICITAÇÃO (INTACTO)
 // -----------------------------------------------------------------
 function ModalSolicitacao({ item, onConfirm, onCancel }) {
   const [localUso, setLocalUso] = useState("");
@@ -73,9 +74,14 @@ function ModalSolicitacao({ item, onConfirm, onCancel }) {
 // 2. COMPONENTE PRINCIPAL (USUÁRIO - PAG GL)
 // -----------------------------------------------------------------
 export default function PagGL() {
+  const router = useRouter(); // Hook de navegação
   const [abaAtiva, setAbaAtiva] = useState("catalogo");
   const [toast, setToast] = useState(null);
 
+  // --- LÓGICA DE USUÁRIO (Igual PagPerfil) ---
+  const [user, setUser] = useState(null);
+
+  // --- LÓGICA DE DADOS (Dinâmico) ---
   const [disponiveis, setDisponiveis] = useState([]);
   const [meusEmprestimos, setMeusEmprestimos] = useState([]);
   const [minhasSolicitacoes, setMinhasSolicitacoes] = useState([]);
@@ -86,6 +92,51 @@ export default function PagGL() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
+  // 1. EFEITO DE AUTENTICAÇÃO (Igual ao seu código de Perfil)
+  useEffect(() => {
+    const usuarioSalvo = localStorage.getItem('usuario');
+    const token = localStorage.getItem('token');
+
+    if (!token || !usuarioSalvo) {
+      router.push('/');
+      return;
+    }
+
+    const dadosBanco = JSON.parse(usuarioSalvo);
+
+    // Mapeia os dados do localStorage para o estado
+    setUser({
+      nome: dadosBanco.nome,
+      id: dadosBanco.gmin, // ID do usuário (GL)
+      foto: dadosBanco.icon || `https://ui-avatars.com/api/?name=${encodeURIComponent(dadosBanco.nome)}&background=28a745&color=fff`
+    });
+  }, [router]);
+
+  // 2. EFEITO DE DADOS (Buscar do Banco de Dados)
+  // Só executa quando o usuário estiver carregado
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchDados = async () => {
+      try {
+        // Envia o ID do usuário para filtrar "Meus Empréstimos" corretamente
+        const res = await fetch(`/api/gl/dashboard?userId=${user.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setDisponiveis(data.disponiveis || []);
+          setMeusEmprestimos(data.meusEmprestimos || []);
+          setMinhasSolicitacoes(data.minhasSolicitacoes || []);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        setToast({ type: "danger", message: "Erro ao conectar com o servidor." });
+      }
+    };
+
+    fetchDados();
+  }, [user]); // Dependência: user (roda assim que o user for setado)
+
+  // 3. EFEITO MENU DROPDOWN
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -95,24 +146,6 @@ export default function PagGL() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuRef]);
-
-  useEffect(() => {
-    setDisponiveis([
-      { id: 1, nome: "Parafusadeira MAKITA DFT08", categoria: "Elétrica", codigo: "FUR-001", status: "Disponível" },
-      { id: 2, nome: "Serra Tico-Tico Industrial", categoria: "Elétrica", codigo: "CHV-002", status: "Disponível" },
-      { id: 4, nome: "Furadeira DeWalt 20V", categoria: "Elétrica", codigo: "FUR-004", status: "Disponível" },
-    ]);
-
-    setMeusEmprestimos([
-      { id: 101, nome: "Multímetro Digital Fluke", codigo: "INS-055", dataRetirada: "15/11/2025", local: "Lab. Eletrônica" }
-    ]);
-
-    setMinhasSolicitacoes([
-      { id: 201, item: "Martelete Rompedor", data: "18/11/2025", status: "Pendente" },
-      { id: 202, item: "Esmerilhadeira Bosch", data: "10/11/2025", status: "Aprovado" },
-      { id: 203, item: "Alicate Hidráulico", data: "05/11/2025", status: "Recusado" },
-    ]);
-  }, []);
 
   const abrirSolicitacao = (item) => {
     setItemSelecionado(item);
@@ -124,23 +157,52 @@ export default function PagGL() {
     setItemSelecionado(null);
   };
 
-  const confirmarSolicitacao = (item, local) => {
-    const novaSolicitacao = {
-      id: Date.now(),
-      item: item.nome,
-      data: new Date().toLocaleDateString(),
-      status: "Pendente",
-      local: local
-    };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    router.push('/');
+  };
 
-    setMinhasSolicitacoes([novaSolicitacao, ...minhasSolicitacoes]);
-    setDisponiveis((prev) => prev.filter((i) => i.id !== item.id));
+  // --- LÓGICA DE SOLICITAÇÃO (POST para o Backend) ---
+  const confirmarSolicitacao = async (item, local) => {
+    try {
+      const res = await fetch('/api/gl/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          equipamento_id: item.id,
+          local_uso: local,
+          usuario_id: user.id // Passamos o ID do usuário logado
+        })
+      });
 
-    setToast({ type: "success", message: `✅ Solicitação enviada para: ${item.nome}` });
-    fecharModal();
+      if (!res.ok) throw new Error("Erro ao salvar");
+
+      // Atualiza visualmente (Otimista) ou recarrega dados
+      // Vamos adicionar manualmente para feedback imediato e remover da lista de disponíveis
+      const novaSolicitacao = {
+        id: Date.now(), // ID temporário visual
+        item: item.nome,
+        data: new Date().toLocaleDateString(),
+        status: "Pendente",
+        local: local
+      };
+
+      setMinhasSolicitacoes([novaSolicitacao, ...minhasSolicitacoes]);
+      setDisponiveis((prev) => prev.filter((i) => i.id !== item.id));
+
+      setToast({ type: "success", message: `✅ Solicitação enviada para: ${item.nome}` });
+      fecharModal();
+
+    } catch (error) {
+      setToast({ type: "danger", message: "Erro ao processar solicitação." });
+    }
   };
 
   const fecharToast = () => setToast(null);
+
+  // Proteção: Não renderiza nada até validar o usuário (igual PagPerfil)
+  if (!user) return null;
 
   return (
     <>
@@ -178,14 +240,16 @@ export default function PagGL() {
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
+              {/* DADOS DINÂMICOS DO USUÁRIO AQUI */}
               <img
-                src="https://ui-avatars.com/api/?name=User+GL&background=28a745&color=fff"
+                src={user.foto}
                 alt="Avatar"
                 className="rounded-circle border border-light"
                 width="32"
                 height="32"
+                style={{ objectFit: 'cover' }}
               />
-              <span className="fw-semibold d-none d-md-block">João (GL)</span>
+              <span className="fw-semibold d-none d-md-block">{user.nome.split(' ')[0]}</span>
               <FaChevronDown />
             </button>
 
@@ -196,7 +260,7 @@ export default function PagGL() {
               <li><h6 className="dropdown-header text-muted">Perfil</h6></li>
               <li><Link className="text-none" href={"./perfil"}><button className="dropdown-item gap-2 d-flex align-items-center"><FaUserCircle /> Meu Perfil</button></Link></li>
               <li><hr className="dropdown-divider" /></li>
-              <li><button className="dropdown-item text-danger gap-2 d-flex align-items-center"><FaSignOutAlt /> Sair</button></li>
+              <li><button className="dropdown-item text-danger gap-2 d-flex align-items-center" onClick={handleLogout}><FaSignOutAlt /> Sair</button></li>
             </ul>
           </div>
         </div>
@@ -218,11 +282,18 @@ export default function PagGL() {
           <div className="col-12">
             <div className="overview-panel p-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
               <div className="d-flex align-items-center gap-3">
-                <div className="brand-badge bg-success" style={{ background: "linear-gradient(135deg, #28a745, #34ce57)" }}>
-                  <FaUserCircle size={28} />
+                <div className="brand-badge bg-success">
+                  <img
+                    src={user.foto}
+                    alt="Avatar"
+                    className="rounded-circle border border-light"
+                    width="80"
+                    height="80"
+                    style={{ objectFit: 'cover' }}
+                  />
                 </div>
                 <div>
-                  <h3 className="mb-0">Olá, João</h3>
+                  <h3 className="mb-0">Olá, {user.nome.split(' ')[0]}</h3>
                   <p className="mb-0 small text-muted">Selecione um item disponível para solicitar.</p>
                 </div>
               </div>
