@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./pagAdmin.css";
+import { useRouter } from 'next/navigation'; // Importante para redirecionar
 import {
   FaTools,
   FaClipboardList,
@@ -12,45 +13,39 @@ import {
   FaTimes,
   FaInfoCircle,
   FaUserCircle,
-  FaCog,
   FaSignOutAlt,
   FaChevronDown,
 } from "react-icons/fa";
 import Link from "next/link";
 
 // -----------------------------------------------------------------
-// 1. COMPONENTE DO FORMULÁRIO (MODIFICADO)
+// 1. COMPONENTE DO FORMULÁRIO (MANTIDO IGUAL)
 // -----------------------------------------------------------------
 function FormEquipamento({ onSave, onCancel, initialData }) {
-  // Estado interno para os campos do formulário
   const [formData, setFormData] = useState({
     id: null,
     nome: "",
     categoria: "",
     codigo: "",
     local: "",
-    status: "Disponível", // NOVO CAMPO
+    status: "Disponível",
   });
 
-  // Este useEffect "popula" o formulário quando abrimos para edição
   useEffect(() => {
     if (initialData) {
-      // Modo Edição: Carrega os dados do item
       setFormData(initialData);
     } else {
-      // Modo Novo: Reseta o formulário
       setFormData({
         id: null,
         nome: "",
         categoria: "",
         codigo: "",
         local: "",
-        status: "Disponível", // Garante o padrão "Disponível"
+        status: "Disponível",
       });
     }
-  }, [initialData]); // Executa sempre que o modal abre (initialData muda)
+  }, [initialData]);
 
-  // Atualiza o estado quando o usuário digita
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -59,133 +54,57 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
     }));
   };
 
-  // Chama a função onSave (que é a salvarEquipamento)
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
   };
 
   return (
-    // O formulário agora inclui o 'body' e o 'footer' do modal
     <form onSubmit={handleSubmit} noValidate>
       <div className="pagmodal-body">
-        {/* Campo Nome */}
         <div className="mb-3">
-          <label htmlFor="nome" className="form-label">
-            Nome do Equipamento
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="nome"
-            name="nome"
-            value={formData.nome}
-            onChange={handleChange}
-            required
-          />
+          <label htmlFor="nome" className="form-label">Nome do Equipamento</label>
+          <input type="text" className="form-control" id="nome" name="nome" value={formData.nome} onChange={handleChange} required />
         </div>
-
-        {/* Campo Categoria */}
         <div className="mb-3">
-          <label htmlFor="categoria" className="form-label">
-            Categoria
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="categoria"
-            name="categoria"
-            value={formData.categoria}
-            onChange={handleChange}
-            required
-          />
+          <label htmlFor="categoria" className="form-label">Categoria</label>
+          <input type="text" className="form-control" id="categoria" name="categoria" value={formData.categoria} onChange={handleChange} required />
         </div>
-
         <div className="row">
-          {/* Campo Código */}
           <div className="col-md-6 mb-3">
-            <label htmlFor="codigo" className="form-label">
-              Código
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="codigo"
-              name="codigo"
-              value={formData.codigo}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="codigo" className="form-label">Código</label>
+            <input type="text" className="form-control" id="codigo" name="codigo" value={formData.codigo} onChange={handleChange} required />
           </div>
-
-          {/* Campo Local */}
           <div className="col-md-6 mb-3">
-            <label htmlFor="local" className="form-label">
-              Local de Armazenamento
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="local"
-              name="local"
-              value={formData.local}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="local" className="form-label">Local de Armazenamento</label>
+            <input type="text" className="form-control" id="local" name="local" value={formData.local} onChange={handleChange} required />
           </div>
         </div>
-
-        {/* ===== NOVO CAMPO STATUS ===== */}
         <div className="mb-3">
-          <label htmlFor="status" className="form-label">
-            Status
-          </label>
-          <select
-            className="form-select"
-            id="status"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            // Impede que o usuário defina "Em Uso" manualmente pelo formulário
-            disabled={formData.status === "Em Uso"}
-          >
+          <label htmlFor="status" className="form-label">Status</label>
+          <select className="form-select" id="status" name="status" value={formData.status} onChange={handleChange} disabled={formData.status === "Em Uso"}>
             <option value="Disponível">Disponível</option>
-            {/* Se o item já estiver "Em Uso", mostre a opção, mas desabilitada */}
-            {formData.status === "Em Uso" && (
-              <option value="Em Uso" disabled>
-                Em Uso (Controlado por Solicitações)
-              </option>
-            )}
+            {formData.status === "Em Uso" && <option value="Em Uso" disabled>Em Uso (Controlado por Solicitações)</option>}
           </select>
         </div>
       </div>
-
       <div className="pagmodal-footer">
-        <button
-          type="button" // type="button" para não submeter o form
-          className="btn btn-outline-secondary"
-          onClick={onCancel} // Chama a função fecharModal
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit" // type="submit" para acionar o handleSubmit
-          className="btn btn-primary-solid"
-        >
-          Salvar
-        </button>
+        <button type="button" className="btn btn-outline-secondary" onClick={onCancel}>Cancelar</button>
+        <button type="submit" className="btn btn-primary-solid">Salvar</button>
       </div>
     </form>
   );
 }
 
 // -----------------------------------------------------------------
-// 3. SEU COMPONENTE PRINCIPAL (MODIFICADO)
+// 3. SEU COMPONENTE PRINCIPAL (ATUALIZADO COM AUTH)
 // -----------------------------------------------------------------
-// ... (mantenha os imports e o componente FormEquipamento exatamente como estão)
-
 export default function PagAdmin() {
-  // ... (mantenha todos os estados e funções: useState, useEffect, salvarEquipamento, etc.)
+  const router = useRouter(); // Hook para navegação
+  
+  // --- 1. ESTADO DO USUÁRIO ---
+  const [user, setUser] = useState(null); // Começa nulo até carregar do storage
+
   const [abaAtiva, setAbaAtiva] = useState("equipamentos");
   const [equipamentos, setEquipamentos] = useState([]);
   const [solicitacoes, setSolicitacoes] = useState([]);
@@ -193,10 +112,34 @@ export default function PagAdmin() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [toast, setToast] = useState(null);
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   const menuRef = useRef(null);
 
+  // --- 2. EFEITO DE AUTENTICAÇÃO (O "porteiro" da página) ---
+  useEffect(() => {
+    const usuarioSalvo = localStorage.getItem('usuario');
+    const token = localStorage.getItem('token');
+
+    // Se não tiver login, manda embora pro login
+    if (!token || !usuarioSalvo) {
+      router.push('/');
+      return;
+    }
+
+    const dadosBanco = JSON.parse(usuarioSalvo);
+
+    // Carrega os dados reais do usuário
+    setUser({
+      nome: dadosBanco.nome,
+      // Se não tiver foto no banco, gera uma com as iniciais
+      foto: dadosBanco.icon || `https://ui-avatars.com/api/?name=${encodeURIComponent(dadosBanco.nome)}&background=0d6efd&color=fff`,
+      isAdmin: true // Opcional: verificar se ele realmente é admin
+    });
+
+  }, [router]);
+
+  // Fecha menu ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -204,13 +147,13 @@ export default function PagAdmin() {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuRef]);
 
+  // Carrega dados iniciais (Mockados por enquanto)
   useEffect(() => {
-    // ... (seu useEffect de dados simulados permanece igual)
+    if (!user) return; // Só carrega dados se o usuário estiver logado
+
     setEquipamentos([
       { id: 1, nome: "Parafusadeira MAKITA DFT08", categoria: "Elétrica", codigo: "FUR-001", local: "Prateleira A3", status: "Disponível" },
       { id: 2, nome: "Serra Tico-Tico Industrial", categoria: "Elétrica", codigo: "CHV-002", local: "Gaveta B1", status: "Disponível" },
@@ -225,7 +168,14 @@ export default function PagAdmin() {
     setEmUso([
       { id: 1, equipamentoId: 3, equipamentoNome: "Esmerilhadeira BOSCH GWS 115", usuario: "Carlos Lima", local: "Setor B", dataInicio: "2025-11-10" },
     ]);
-  }, []);
+  }, [user]); // Dependência 'user' para rodar só depois do login
+
+  // --- 3. FUNÇÃO DE LOGOUT ---
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    router.push('/');
+  };
 
   const abrirModal = (tipo, item = null) => {
     setModalData({ tipo, item });
@@ -285,9 +235,9 @@ export default function PagAdmin() {
 
   const fecharToast = () => setToast(null);
 
-  // -----------------------------------------------------------------
-  // ALTERAÇÕES RESPONSIVAS NO HEADER ABAIXO (USANDO CLASSES BOOTSTRAP)
-  // -----------------------------------------------------------------
+  // SE NÃO TIVER USER CARREGADO AINDA, NÃO MOSTRA NADA (Evita piscar tela de erro)
+  if (!user) return null; 
+
   return (
     <>
       <header
@@ -297,11 +247,7 @@ export default function PagAdmin() {
           color: "white",
         }}
       >
-        {/* Alterado px-4 para px-3 (mobile) e px-md-4 (desktop) */}
         <div className="container-fluid px-3 px-md-4 py-3 d-flex justify-content-between align-items-center">
-
-          {/* ===== LOGO + TÍTULO ===== */}
-          {/* gap-2 no mobile, gap-md-3 no desktop para economizar espaço */}
           <div className="d-flex align-items-center gap-2 gap-md-3">
             <div
               className="d-flex align-items-center justify-content-center rounded-circle"
@@ -311,25 +257,17 @@ export default function PagAdmin() {
                 background: "rgba(255,255,255,0.15)",
                 boxShadow: "0 0 10px rgba(255,255,255,0.2)",
                 animation: "pulse 2s infinite",
-                flexShrink: 0, // Garante que o logo não amasse
+                flexShrink: 0,
               }}
             >
               <FaTools size={24} className="text-white" />
             </div>
-
             <div>
-              {/* h5 levemente menor em mobile se necessário, mas mantive o padrão */}
               <h1 className="h5 fw-bold mb-1 text-nowrap">Equipamentos - GA</h1>
-
-              {/* ADICIONADO: d-none d-md-block */}
-              {/* Oculta este texto em telas pequenas (mobile) e mostra em médias/grandes */}
-              <p className="small text-light opacity-75 mb-0 d-none d-md-block">
-                Painel de Administração
-              </p>
+              <p className="small text-light opacity-75 mb-0 d-none d-md-block">Painel de Administração</p>
             </div>
           </div>
 
-          {/* --- DROPDOWN --- */}
           <div className="dropdown text-center position-relative" ref={menuRef}>
             <button
               className="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 rounded-pill px-3 py-2 user-menu-button"
@@ -337,37 +275,33 @@ export default function PagAdmin() {
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
+              {/* --- IMAGEM E NOME DINÂMICOS DO USUÁRIO --- */}
               <img
-                src="https://ui-avatars.com/api/?name=ADM&background=0d6efd&color=fff"
-                alt="Avatar"
+                src={user.foto}
+                alt={user.nome}
                 className="rounded-circle border border-light"
                 width="32"
                 height="32"
+                style={{ objectFit: 'cover' }}
               />
-              {/* ADICIONADO: d-none d-md-block */}
-              {/* Oculta o texto "Administrador" no celular, deixando só o avatar */}
-              <span className="fw-semibold d-none d-md-block">Administrador</span>
-
+              <span className="fw-semibold d-none d-md-block">{user.nome}</span>
               <FaChevronDown />
             </button>
 
             <ul
-              className={`dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu ${isMenuOpen ? "show" : ""
-                }`}
-              aria-labelledby="userMenu"
-              // Força o menu a não estourar a tela no mobile alinhando à direita se preciso
+              className={`dropdown-menu shadow-sm border-0 p-2 start-50 translate-middle-x margem_menu ${isMenuOpen ? "show" : ""}`}
               style={{ minWidth: "200px" }}
             >
               <li><h6 className="dropdown-header text-muted">Perfil</h6></li>
               <li>
-                <Link className="text-none" href={"./perfil"}><button className="dropdown-item d-flex align-items-center gap-2">
-                  <FaUserCircle /> Meu Perfil
-                </button>
+                <Link className="text-none" href={"./perfil"}>
+                  <button className="dropdown-item d-flex align-items-center gap-2"><FaUserCircle /> Meu Perfil</button>
                 </Link>
               </li>
               <li><hr className="dropdown-divider" /></li>
               <li>
-                <button className="dropdown-item text-danger d-flex align-items-center gap-2">
+                {/* --- BOTÃO SAIR AGORA FUNCIONA --- */}
+                <button className="dropdown-item text-danger d-flex align-items-center gap-2" onClick={handleLogout}>
                   <FaSignOutAlt /> Sair
                 </button>
               </li>
@@ -376,7 +310,7 @@ export default function PagAdmin() {
         </div>
       </header>
 
-      {/* ... Restante do Main e Modal iguais ... */}
+      {/* ... Restante do código (Main, Painéis, Abas) permanece igual ... */}
       <main className="pagadmin-container container-fluid">
         {toast && (
           <div className="toast-container position-fixed top-0 end-0 p-3">
@@ -390,109 +324,39 @@ export default function PagAdmin() {
         )}
 
         <div className="row mb-4 gx-3">
-
           <div className="col-lg-8">
-
             <div className="overview-panel p-3 d-flex align-items-center gap-3">
-
-              <div className="brand-badge">
-
-                <FaTools size={28} />
-
-              </div>
-
+              <div className="brand-badge"><FaTools size={28} /></div>
               <div className="flex-grow-1">
-
                 <h3 className="mb-0">Painel de Controle — Equipamentos GA</h3>
-
-                <p className="mb-0 small text-muted">
-
-                  Gerencie equipamentos, solicitações e ferramentas em uso.
-
-                </p>
-
+                <p className="mb-0 small text-muted">Gerencie equipamentos, solicitações e ferramentas em uso.</p>
               </div>
-
               <div className="d-flex gap-2">
-
-                <button
-
-                  className="btn btn-primary-solid"
-
-                  onClick={() => abrirModal("novoEquip")} // Abre o modal em modo "novo"
-
-                >
-
+                <button className="btn btn-primary-solid" onClick={() => abrirModal("novoEquip")}>
                   <FaBoxes className="me-1" /> Novo Equipamento
-
                 </button>
-
               </div>
-
             </div>
-
           </div>
-
-
 
           <div className="col-lg-4">
-
             <div className="stats-panel p-3">
-
-              {/* Agora com 3 itens, o 'justify-content-between' 
-
-      vai distribuir eles igualmente (um na esquerda, um no centro, um na direita)
-
-    */}
-
               <div className="d-flex justify-content-between align-items-center">
-
-
-
-                {/* Item 1: Equipamentos */}
-
-                <div className="text-center text-primary"> {/* Alinhado ao centro */}
-
+                <div className="text-center text-primary">
                   <small className="text-muted">Equipamentos</small>
-
                   <h4 className="mb-0">{equipamentos.length}</h4>
-
                 </div>
-
-
-
-                {/* Item 2: Em Uso (NOVO) */}
-
                 <div className="text-center text-warning">
-
                   <small className="text-muted">Em Uso</small>
-
-                  {/* Puxa a contagem da lista 'emUso' */}
-
                   <h4 className="mb-0">{emUso.length}</h4>
-
                 </div>
-
-
-
-                {/* Item 3: Solicitações */}
-
-                <div className="text-center text-danger"> {/* Alinhado ao centro */}
-
+                <div className="text-center text-danger">
                   <small className="text-muted">Solicitações</small>
-
                   <h4 className="mb-0">{solicitacoes.length}</h4>
-
                 </div>
-
-
-
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         <nav className="nav-dashboard mb-3 overflow-auto flex-nowrap">
