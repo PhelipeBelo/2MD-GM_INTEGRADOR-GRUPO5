@@ -7,11 +7,13 @@ class ProdutoModel {
         const connection = await getConnection();
         try {
             // Importante: Campos mapeados para o seu banco
-            const sql = `INSERT INTO equipamentos_ga (nome, marca, serie, eq_status) VALUES (?, ?, ?, ?)`;
+            const sql = `INSERT INTO equipamentos_ga (nome, marca, serie, descricao, foto_url, eq_status) VALUES (?, ?, ?, ?, ?, ?)`;
             const [result] = await connection.query(sql, [
                 dados.nome, 
                 dados.marca, 
                 dados.serie, 
+                dados.descricao,
+                dados.foto_url,  
                 dados.status || 'Disponível'
             ]);
             return result.insertId;
@@ -30,6 +32,8 @@ class ProdutoModel {
             if (dados.nome) { campos.push('nome = ?'); valores.push(dados.nome); }
             if (dados.marca) { campos.push('marca = ?'); valores.push(dados.marca); }
             if (dados.serie) { campos.push('serie = ?'); valores.push(dados.serie); }
+            if (dados.descricao) { campos.push('descricao = ?'); valores.push(dados.descricao); }
+            if (dados.foto_url) { campos.push('foto_url = ?'); valores.push(dados.foto_url); }
             if (dados.status) { campos.push('eq_status = ?'); valores.push(dados.status); }
 
             if (campos.length === 0) return 0;

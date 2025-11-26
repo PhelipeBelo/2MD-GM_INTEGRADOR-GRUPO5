@@ -27,7 +27,8 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
     nome: "",
     categoria: "",
     codigo: "",
-    local: "",
+    descricao: "",
+    foto_url: "",
     status: "Disponível",
   });
 
@@ -39,7 +40,8 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
         nome: initialData.nome || "",
         categoria: initialData.categoria || "", // Visualmente é categoria, no banco será marca
         codigo: initialData.codigo || "",       // Visualmente é código, no banco será série
-        local: initialData.local || "",         
+        descricao: initialData.descricao || "", 
+        foto_url: initialData.foto_url || "",         
         status: initialData.status || "Disponível",
       });
     } else {
@@ -48,7 +50,8 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
         nome: "",
         categoria: "",
         codigo: "",
-        local: "",
+        descricao: "",
+        foto_url: "",
         status: "Disponível",
       });
     }
@@ -73,20 +76,25 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="categoria" className="form-label">Categoria (Marca)</label>
-          <input type="text" className="form-control" id="categoria" name="categoria" value={formData.categoria || ""} onChange={handleChange} required />
+          <label htmlFor="descricao" className="form-label">Descrição</label>
+          <input type="text" className="form-control" id="descricao" name="descricao" value={formData.descricao || ""} onChange={handleChange} required />
         </div>
 
         <div className="row">
           <div className="col-md-6 mb-3">
-            <label htmlFor="codigo" className="form-label">Código (Série)</label>
+            <label htmlFor="codigo" className="form-label">Série</label>
             <input type="text" className="form-control" id="codigo" name="codigo" value={formData.codigo || ""} onChange={handleChange} required />
           </div>
 
           <div className="col-md-6 mb-3">
-            <label htmlFor="local" className="form-label">Local de Armazenamento</label>
-            <input type="text" className="form-control" id="local" name="local" value={formData.local || ""} onChange={handleChange} />
+            <label htmlFor="categoria" className="form-label">Marca</label>
+            <input type="text" className="form-control" id="categoria" name="categoria" value={formData.categoria || ""} onChange={handleChange} required/>
           </div>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="foto_url" className="form-label">URL da Foto</label>
+          <input type="text" className="form-control" id="foto_url" name="foto_url" value={formData.foto_url || ""} onChange={handleChange} required />
         </div>
 
         <div className="mb-3">
@@ -192,6 +200,8 @@ export default function PagAdmin() {
         nome: dadosForm.nome,
         marca: dadosForm.categoria, 
         serie: dadosForm.codigo,    
+        descricao: dadosForm.descricao, 
+        foto_url: dadosForm.foto_url,
         status: dadosForm.status || 'Disponível'
       };
 

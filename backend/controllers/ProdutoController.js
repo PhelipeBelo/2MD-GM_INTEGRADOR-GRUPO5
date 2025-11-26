@@ -6,16 +6,16 @@ class ProdutoController {
     static async criar(req, res) {
         try {
             // Recebe os dados com os nomes que o Frontend (PagAdmin) envia
-            const { nome, marca, serie, status } = req.body;
+            const { nome, marca, serie, status, descricao, foto_url } = req.body;
 
             // Validação: Verifica se os campos obrigatórios da tabela estão presentes
-            if (!nome || !marca || !serie) {
+            if (!nome || !marca || !serie || !descricao || !foto_url) {
                 return res.status(400).json({
                     mensagem: "Preencha todos os campos obrigatórios (Nome, Marca/Categoria, Série/Código)."
                 });
             }
 
-            await ProdutoModel.criar({ nome, marca, serie, status });
+            await ProdutoModel.criar({ nome, marca, serie, status, descricao, foto_url });
 
             return res.status(201).json({ mensagem: "Equipamento criado com sucesso!" });
 
@@ -33,9 +33,9 @@ class ProdutoController {
     static async atualizar(req, res) {
         try {
             const { id } = req.params;
-            const { nome, marca, serie, status } = req.body;
+            const { nome, marca, serie, status , descricao, foto_url } = req.body;
 
-            await ProdutoModel.atualizar(id, { nome, marca, serie, status });
+            await ProdutoModel.atualizar(id, { nome, marca, serie, status , descricao, foto_url});
 
             return res.status(200).json({ mensagem: "Equipamento atualizado!" });
 

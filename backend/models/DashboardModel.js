@@ -45,7 +45,7 @@ class DashboardModel {
     static async listarTodosEquipamentos() {
         const connection = await getConnection();
         try {
-            const sql = `SELECT id, nome, serie AS codigo, marca AS categoria, eq_status AS status FROM equipamentos_ga ORDER BY id DESC`;
+            const sql = `SELECT id, nome, serie AS codigo, marca AS categoria, descricao, foto_url, eq_status AS status FROM equipamentos_ga ORDER BY id DESC`;
             const [rows] = await connection.query(sql);
             return rows;
         } finally { connection.release(); }
