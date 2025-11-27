@@ -10,9 +10,7 @@ export default function LoginPage() {
     const [registro, setRegistro] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-
     const [employee, setEmployee] = useState(null);
-
     const router = useRouter();
 
     const handleLoginClick = () => {
@@ -26,9 +24,7 @@ export default function LoginPage() {
         setError('');
     };
 
-
     const handleBuscarUsuario = async () => {
-
         if (registro.trim() === '') return;
         if (employee && employee.gmin === registro) return;
         setIsLoading(true);
@@ -49,7 +45,6 @@ export default function LoginPage() {
             }
 
             setEmployee(data.dados.usuario);
-
             localStorage.setItem('token', data.dados.token);
             localStorage.setItem('usuario', JSON.stringify(data.dados.usuario));
 
@@ -63,13 +58,11 @@ export default function LoginPage() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
         if (!employee) {
             handleBuscarUsuario();
             return;
         }
-
-        if (employee.tipo == 'admin') {
+        if (employee.tipo === 'admin') {
             router.push('/adm');
         } else {
             router.push('/gl');
@@ -80,10 +73,8 @@ export default function LoginPage() {
 
     return (
         <main className={containerClasses}>
-
             <div className={styles.formPanelLeft}>
-
-                <form className="p-5 text-center" onSubmit={handleSubmit}>
+                <form className="p-5 text-center" onSubmit={handleSubmit} style={{maxWidth: '500px', width: '100%'}}>
                     <h1 className="fw-bold mb-4">Faça o login</h1>
 
                     <div className="form-floating mb-3">
@@ -103,18 +94,10 @@ export default function LoginPage() {
                             disabled={isLoading}
                         />
                         <label htmlFor="registroInput">Insira seu Registro</label>
-
-                        {error && (
-                            <div className="invalid-feedback text-start">
-                                {error}
-                            </div>
-                        )}
+                        {error && <div className="invalid-feedback text-start">{error}</div>}
                     </div>
 
-                    <div
-                        className="text-center my-4 d-flex align-items-center justify-content-center"
-                        style={{ minHeight: '100px' }}
-                    >
+                    <div className="text-center my-4 d-flex align-items-center justify-content-center" style={{ minHeight: '100px' }}>
                         {isLoading && (
                             <div className="spinner-border" style={{ color: '#1d5fa0' }} role="status">
                                 <span className="visually-hidden">Carregando...</span>
@@ -124,10 +107,11 @@ export default function LoginPage() {
                         {!isLoading && employee && (
                             <div className="d-flex align-items-center justify-content-center p-3 bg-light rounded w-100 shadow-sm fade-in">
                                 <img
-                                    src={employee.icon}
+                                    src={employee.icon || 'https://via.placeholder.com/60'}
                                     alt={`Foto de ${employee.nome}`}
                                     className="rounded-circle me-3"
                                     style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                                    onError={(e) => e.target.src = 'https://via.placeholder.com/60?text=User'}
                                 />
                                 <div className="text-start">
                                     <span className="d-block text-muted small" style={{ fontSize: '0.8rem' }}>Bem-vindo(a),</span>
@@ -161,116 +145,96 @@ export default function LoginPage() {
                         type="button"
                         className="btn btn-link mt-3"
                         onClick={handleBackClick}
-                        style={{ color: '#1d5fa0' }}
+                        style={{ color: '#1d5fa0', textDecoration : 'none'}}
                     >
                         Voltar
                     </button>
                 </form>
-
             </div>
+
             <div className={styles.formPanelRight}></div>
 
             <div className={styles.overlayContainer}>
-
-
-
                 <div className={styles.overlayPanelLeft}>
-                    <h1 className="fw-bold">Bem Vindo!</h1>
-
+                
 
                     <div className={styles.factoryWrapper}>
 
-
-                        <svg className={styles.factorySvg} viewBox="0 0 450 250">
+                        <svg className={styles.factorySvg} viewBox="0 0 340 250">
                             <g fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                                 <rect id="factory-main" x="20" y="120" width="300" height="100" />
                                 <path id="factory-roof" d="M20 120 L320 120 M20 120 L170 80 L320 120" />
-                                
-
                                 <rect id="window1" x="50" y="140" width="30" height="40" />
                                 <rect id="window2" x="100" y="140" width="30" height="40" />
                                 <rect id="window3" x="150" y="140" width="30" height="40" />
                                 <rect id="window4" x="200" y="140" width="30" height="40" />
                                 <rect id="window5" x="250" y="140" width="30" height="40" />
-                                
-
                                 <rect id="water-tower-post-body" x="280" y="80" width="30" height="40" />
                                 <circle id="water-tower-tank" cx="295" cy="50" r="30" />
                                 <text id="gm-logo-text" x="295" y="58" textAnchor="middle" fontSize="18" fill="#fff" stroke="none" style={{fontWeight: 'bold'}}>GM</text>
                             </g>
                         </svg>
 
-
-                        <svg className={styles.chevyLogo} viewBox="0 0 200 100">
+                        <svg className={styles.chevyLogo} viewBox="0 0 300 120">
                             <defs>
 
                                 <linearGradient id="chromeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" stopColor="#E0E0E0"/>
-                                    <stop offset="25%" stopColor="#B0B0B0"/>
+                                    <stop offset="0%" stopColor="#F0F0F0"/>
+                                    <stop offset="20%" stopColor="#C0C0C0"/>
                                     <stop offset="50%" stopColor="#808080"/>
-                                    <stop offset="75%" stopColor="#B0B0B0"/>
-                                    <stop offset="100%" stopColor="#E0E0E0"/>
+                                    <stop offset="80%" stopColor="#C0C0C0"/>
+                                    <stop offset="100%" stopColor="#F0F0F0"/>
                                 </linearGradient>
 
-
-                                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <linearGradient id="goldBack" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stopColor="#FFD700"/>
-                                    <stop offset="50%" stopColor="#C0A000"/>
+                                    <stop offset="50%" stopColor="#E6AC00"/>
                                     <stop offset="100%" stopColor="#FFD700"/>
                                 </linearGradient>
 
-
-                                <pattern id="goldDots" patternUnits="userSpaceOnUse" width="4" height="4">
-                                    <circle cx="1.5" cy="1.5" r="0.5" fill="#8B6508" opacity="0.3"/>
+  
+                                <pattern id="goldDots" patternUnits="userSpaceOnUse" width="3" height="3">
+                                    <rect width="3" height="3" fill="#FFD700" />
+                                    <rect x="0" y="0" width="1.5" height="1.5" fill="#B8860B" opacity="0.4" />
+                                    <rect x="1.5" y="1.5" width="1.5" height="1.5" fill="#B8860B" opacity="0.4" />
                                 </pattern>
+
+                                <filter id="bevelEffect" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+                                    <feSpecularLighting in="blur" surfaceScale="2" specularConstant="1" specularExponent="15" lightingColor="white" result="specOut">
+                                        <fePointLight x="-5000" y="-10000" z="20000"/>
+                                    </feSpecularLighting>
+                                    <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
+                                    <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litPaint"/>
+                                </filter>
                             </defs>
                             
                             <g>
-
                                 <path 
-                                    id="chevy-outer-shape" 
-                                    d="M20 45 L50 15 L150 15 L180 45 L150 75 L50 75 Z"
+                                    id="chevy-outer-chrome" 
+                                    d="M120 10 L180 10 L180 35 L280 35 L295 65 L180 65 L180 90 L120 90 L120 65 L20 65 L5 35 L120 35 Z"
                                     fill="url(#chromeGradient)" 
-                                    stroke="none"
-                                    opacity="0"
+                                    stroke="#555"
+                                    strokeWidth="1"
+                                    filter="url(#bevelEffect)"
                                 />
-
-
                                 <path 
                                     id="chevy-inner-gold-base" 
-                                    d="M28 45 L53 22 L147 22 L172 45 L147 68 L53 68 Z"
-                                    fill="url(#goldGradient)" 
-                                    stroke="none"
-                                    opacity="0"
+                                    d="M125 15 L175 15 L175 40 L275 40 L285 60 L175 60 L175 85 L125 85 L125 60 L25 60 L15 40 L125 40 Z"
+                                    fill="url(#goldBack)" 
                                 />
-
-
                                 <path 
                                     id="chevy-inner-gold-texture" 
-                                    d="M28 45 L53 22 L147 22 L172 45 L147 68 L53 68 Z"
+                                    d="M125 15 L175 15 L175 40 L275 40 L285 60 L175 60 L175 85 L125 85 L125 60 L25 60 L15 40 L125 40 Z"
                                     fill="url(#goldDots)" 
-                                    stroke="none"
-                                    opacity="0"
-                                />
-
-
-                                <path 
-                                    id="chevy-highlight-top" 
-                                    d="M20 45 L50 15 L150 15 L180 45" 
-                                    fill="none" 
-                                    stroke="#FFFFFF" 
-                                    strokeWidth="1.5" 
-                                    strokeOpacity="0.8"
-                                    opacity="0"
                                 />
                                 <path 
-                                    id="chevy-highlight-bottom" 
-                                    d="M20 45 L50 75 L150 75 L180 45" 
+                                    id="chevy-highlight" 
+                                    d="M120 10 L180 10 M120 90 L180 90" 
                                     fill="none" 
-                                    stroke="#505050" 
-                                    strokeWidth="1.5" 
-                                    strokeOpacity="0.8"
-                                    opacity="0"
+                                    stroke="rgba(255,255,255,0.8)" 
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
                                 />
 
                             </g>
@@ -283,9 +247,7 @@ export default function LoginPage() {
                         Entrar
                     </button>
                 </div>
-
             </div>
-
         </main>
     );
 }
