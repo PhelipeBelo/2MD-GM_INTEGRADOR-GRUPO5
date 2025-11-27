@@ -466,7 +466,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-// 1. ADICIONADO: Import do Socket.io
 import io from 'socket.io-client';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -489,7 +488,7 @@ import {
 import Link from "next/link";
 
 // -----------------------------------------------------------------
-// 1. COMPONENTE MODAL DE SOLICITAÇÃO (SEM ALTERAÇÕES)
+// 1. COMPONENTE MODAL DE SOLICITAÇÃO (MANTIDO INTACTO)
 // -----------------------------------------------------------------
 function ModalSolicitacao({ item, onConfirm, onCancel }) {
   const [localUso, setLocalUso] = useState("");
@@ -556,7 +555,7 @@ export default function PagGL() {
   const [disponiveis, setDisponiveis] = useState([]);
   const [meusEmprestimos, setMeusEmprestimos] = useState([]);
   const [minhasSolicitacoes, setMinhasSolicitacoes] = useState([]);
-  const [loadingDados, setLoadingDados] = useState(true); // Estado de carregamento inicial
+  const [loadingDados, setLoadingDados] = useState(true);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [itemSelecionado, setItemSelecionado] = useState(null);
@@ -564,48 +563,62 @@ export default function PagGL() {
   const menuRef = useRef(null);
 
   const API_URL = "http://localhost:3001/api";
-  const SOCKET_URL = "http://localhost:3010"; // URL do servidor Socket
+  const SOCKET_URL = "http://localhost:3010";
 
   // -----------------------------------------------------------------
-  // 2.1 ADICIONADO: Lógica do Socket para Atualização em Tempo Real
+  // 2.1 LÓGICA DO SOCKET (CORRIGIDA PARA NÃO PERDER DADOS)
   // -----------------------------------------------------------------
   useEffect(() => {
-    // Só conecta se o usuário já estiver carregado (precisamos do nome dele para filtrar)
     if (!user) return;
 
     const socket = io(SOCKET_URL);
 
     socket.on('atualizacao_dados', (data) => {
-      // O backend manda TUDO (global). Aqui filtramos para a visão deste usuário específico.
       if (data) {
         
-        // 1. Atualiza Catálogo (Mostra apenas o que está 'Disponível' para todos)
+        // 1. Atualiza Catálogo
         if (data.equipamentos) {
           const apenasDisponiveis = data.equipamentos.filter(eq => eq.status === 'Disponível');
           setDisponiveis(apenasDisponiveis);
         }
 
-        // 2. Atualiza Meus Empréstimos (Filtra onde usuario == meu nome)
+        // 2. Atualiza Meus Empréstimos (MAPEAMENTO CORRIGIDO)
         if (data.emUso) {
-          const meusItens = data.emUso.filter(eq => eq.usuario === user.nome);
+          const meusItens = data.emUso
+            .filter(eq => eq.usuario === user.nome)
+            .map(eq => ({
+                ...eq,
+                // Traduzimos os campos do Backend para o Frontend
+                nome: eq.equipamentoNome,       // Corrige o nome sumindo
+                codigo: eq.codigo,              // Corrige o código sumindo
+                dataRetirada: eq.dataInicio     // Corrige a data sumindo
+            }));
           setMeusEmprestimos(meusItens);
         }
 
-        // 3. Atualiza Minhas Solicitações
-        // Nota: O backend básico manda apenas as pendentes e as em uso.
-        // Vamos reconstruir a lista de solicitações com base nisso para manter atualizado.
+        // 3. Atualiza Minhas Solicitações (MAPEAMENTO CORRIGIDO)
         if (data.solicitacoes && data.emUso) {
-            // Pendentes (Vindas da tabela global de pendentes filtradas por mim)
+            
+            // Pendentes
             const minhasPendentes = data.solicitacoes
                 .filter(s => s.usuario === user.nome)
-                .map(s => ({ ...s, item: s.equipamentoNome, data: new Date().toLocaleDateString() }));
+                .map(s => ({
+                    ...s, 
+                    item: s.equipamentoNome,    // Corrige o nome do item
+                    data: s.data_criacao        // Corrige a data
+                }));
 
-            // Aprovadas (Que agora estão em uso)
+            // Aprovadas (Histórico vindo do 'emUso')
             const minhasAprovadas = data.emUso
                 .filter(e => e.usuario === user.nome)
-                .map(e => ({ ...e, item: e.equipamentoNome, data: new Date(e.dataInicio).toLocaleDateString(), status: 'Aprovado' }));
+                .map(e => ({
+                    ...e, 
+                    item: e.equipamentoNome,    // Corrige o nome do item
+                    data: e.dataInicio,         // Corrige a data
+                    status: 'Aprovado' 
+                }));
 
-            // Atualiza o estado mesclando (dando preferência visual para as pendentes no topo)
+            // Junta e mantém as pendentes no topo (ou por data se preferir)
             setMinhasSolicitacoes([...minhasPendentes, ...minhasAprovadas]);
         }
       }
@@ -614,13 +627,12 @@ export default function PagGL() {
     return () => {
       socket.disconnect();
     };
-  }, [user]); // Dependência [user] é crucial: reinicia o socket se o usuário mudar/logar
+  }, [user]); 
 
   // -----------------------------------------------------------------
-  // FIM DA LÓGICA DO SOCKET
+  // RESTANTE DA LÓGICA (MANTIDA INTACTA)
   // -----------------------------------------------------------------
 
-  // 1. VERIFICA LOGIN
   useEffect(() => {
     const usuarioSalvo = localStorage.getItem('usuario');
     const token = localStorage.getItem('token');
@@ -639,10 +651,8 @@ export default function PagGL() {
     });
   }, [router]);
 
-  // 2. BUSCA DADOS DO BACKEND
   const fetchDados = async () => {
     if (!user) return;
-    // setLoadingDados(true); // Com socket, podemos evitar loaders piscando nas atualizações
     
     try {
       const res = await fetch(`${API_URL}/gl/dashboard?userId=${user.id}`);
@@ -664,12 +674,10 @@ export default function PagGL() {
     }
   };
 
-  // Roda a busca assim que o usuário estiver setado
   useEffect(() => {
     fetchDados();
   }, [user]);
 
-  // Menu Dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -696,7 +704,6 @@ export default function PagGL() {
     router.push('/');
   };
 
-  // --- ENVIAR SOLICITAÇÃO AO BACKEND ---
   const confirmarSolicitacao = async (item, local, stopLoading) => {
     try {
       const res = await fetch(`${API_URL}/gl/dashboard`, {
@@ -714,8 +721,6 @@ export default function PagGL() {
         throw new Error(erro.erro || "Erro ao processar");
       }
 
-      // Feedback imediato (UI Otimista)
-      // O Socket vai confirmar isso em até 10s, mas atualizamos já para UX rápida
       const novaSolicitacao = {
         id: Date.now(),
         item: item.nome,

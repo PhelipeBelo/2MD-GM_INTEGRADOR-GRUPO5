@@ -22,10 +22,10 @@ const fetchDashboardData = async () => {
   let conn; // Variável para armazenar a conexão
 
   try {
-    // PASSO A: Obtém uma conexão ativa do seu pool (database.js)
+    // PASSO A: Obtém uma conexão ativa do seu pool
     conn = await getConnection();
 
-    // PASSO B: Executa as 3 queries em paralelo usando a conexão obtida
+    // PASSO B: Executa as 3 queries em paralelo
     const [equipamentos, solicitacoes, emUso] = await Promise.all([
       
       // Query 1: Equipamentos + Local (Subquery)
@@ -45,13 +45,15 @@ const fetchDashboardData = async () => {
         ORDER BY eg.nome ASC
       `),
 
-      // Query 2: Solicitações Pendentes
+      // Query 2: Solicitações Pendentes (CORRIGIDA)
       conn.execute(`
         SELECT 
           eeg.id,
           eg.nome AS equipamentoNome,
+          eg.serie AS codigo,  -- <--- ADICIONADO: Necessário para o card
           gl.nome AS usuario,
           eeg.local_uso AS local,
+          eeg.data_criacao,    -- <--- ADICIONADO: Necessário para mostrar a data
           eeg.status
         FROM equipamento_emp_ga eeg
         INNER JOIN equipamentos_ga eg ON eeg.equipamento_id = eg.id
@@ -60,11 +62,12 @@ const fetchDashboardData = async () => {
         ORDER BY eeg.data_criacao DESC
       `),
 
-      // Query 3: Em Uso (Aprovados)
+      // Query 3: Em Uso (CORRIGIDA)
       conn.execute(`
         SELECT 
           eeg.id,
           eg.nome AS equipamentoNome,
+          eg.serie AS codigo,  -- <--- ADICIONADO: Necessário para o card
           gl.nome AS usuario,
           eeg.local_uso AS local,
           eeg.data_criacao AS dataInicio,
@@ -77,7 +80,7 @@ const fetchDashboardData = async () => {
       `)
     ]);
 
-    // O mysql2 retorna [rows, fields], pegamos o índice 0 (rows)
+    // Retorna os dados formatados
     return {
       equipamentos: equipamentos[0],
       solicitacoes: solicitacoes[0],
@@ -88,15 +91,14 @@ const fetchDashboardData = async () => {
     console.error("❌ Erro no Socket Server:", error.message);
     return null;
   } finally {
-    // PASSO C (CRUCIAL): Devolver a conexão para o pool
-    // Se não fizermos isso, seu site cai em menos de 2 minutos.
+    // PASSO C: Devolver a conexão para o pool
     if (conn) {
       conn.release(); 
     }
   }
 };
 
-// 3. Loop de Atualização (10 segundos)
+// 3. Loop de Atualização (Definido para 5 segundos conforme seu código anterior)
 setInterval(async () => {
   const data = await fetchDashboardData();
   
