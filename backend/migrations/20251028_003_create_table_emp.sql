@@ -27,9 +27,7 @@ CREATE TABLE IF NOT EXISTS equipamento_emp_ga (
         ON UPDATE CASCADE,
 
     -- OTIMIZAÇÃO NEXUS (Índices para Performance)
-    -- Removemos a UNIQUE KEY antiga para permitir que o usuário pegue o mesmo item em datas diferentes (Histórico).
-    -- Adicionamos índices simples para deixar as buscas do Dashboard instantâneas.
-    INDEX idx_busca_usuario (gl_id),         -- Acelera: "Minhas Solicitações"
-    INDEX idx_busca_status (status),         -- Acelera: "Filtrar Pendentes" no painel do Admin
-    INDEX idx_busca_equip (equipamento_id)   -- Acelera: "Histórico deste equipamento"
+    INDEX idx_busca_usuario (gl_id),         
+    INDEX idx_busca_status (status),         
+    INDEX idx_busca_equip (equipamento_id)  
 );

@@ -52,7 +52,7 @@ class DashboardController {
 
     static async responderSolicitacao(req, res) {
         try {
-            const { id, acao } = req.params; // acao: 'aprovar' ou 'recusar'
+            const { id, acao } = req.params; 
             const status = acao === 'aprovar' ? 'Aprovado' : 'Recusado';
             
             await DashboardModel.atualizarStatusSolicitacao(id, status);

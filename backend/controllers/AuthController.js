@@ -18,25 +18,7 @@ class AuthController {
                     mensagem: 'O GMIN é obrigatório'
                 });
             }
-
-            // if (!senha || senha.trim() === '') {
-            //     return res.status(400).json({
-            //         sucesso: false,
-            //         erro: 'Senha obrigatória',
-            //         mensagem: 'A senha é obrigatória'
-            //     });
-            // }
-
-            // // Validação básica de formato de email
-            // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            // if (!emailRegex.test(email)) {
-            //     return res.status(400).json({
-            //         sucesso: false,
-            //         erro: 'Email inválido',
-            //         mensagem: 'Formato de email inválido'
-            //     });
-            // }
-
+            
             // Verificar credenciais
             const usuario = await UsuarioModel.verificarCredenciais(gmin.trim());
             
@@ -228,7 +210,6 @@ class AuthController {
     // GET /usuarios - Listar todos os usuários (apenas admin, com paginação)
     static async listarUsuarios(req, res) {
         try {
-            // Obter parâmetros de paginação da query string
             const pagina = parseInt(req.query.pagina) || 1;
             const limite = parseInt(req.query.limite) || 10;
             
@@ -251,8 +232,6 @@ class AuthController {
             }
             
             const resultado = await UsuarioModel.listarTodos(pagina, limite);
-            
-            // Remover senha de todos os usuários
             const usuariosSemSenha = resultado.usuarios.map(({ senha, ...usuario }) => usuario);
 
             res.status(200).json({

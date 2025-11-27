@@ -55,7 +55,6 @@ class DashboardModel {
     static async listarTudoEmUsoAdmin() {
         const connection = await getConnection();
         try {
-            // Tenta pegar o nome do usuário da tabela gl_ga
             const sql = `
                 SELECT emp.id, eq.nome AS equipamentoNome, u.nome AS usuario, emp.local_uso AS local, emp.data_criacao AS dataInicio
                 FROM equipamento_emp_ga emp

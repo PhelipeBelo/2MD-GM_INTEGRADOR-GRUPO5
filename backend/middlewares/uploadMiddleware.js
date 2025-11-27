@@ -76,12 +76,12 @@ const fileFilterImagens = (req, file, cb) => {
 
 // Filtro genérico para outros arquivos (pode ser expandido)
 const fileFilterArquivos = (req, file, cb) => {
-    // Por padrão, aceitar qualquer tipo de arquivo para uploads genéricos
+    
     cb(null, true);
 };
 
 // Obter tamanho máximo do arquivo
-const maxFileSize = parseInt(process.env.MAX_FILE_SIZE) || 5242880; // 5MB por padrão
+const maxFileSize = parseInt(process.env.MAX_FILE_SIZE) || 5242880; 
 
 // Upload para imagens
 const uploadImagens = multer({
@@ -96,7 +96,7 @@ const uploadImagens = multer({
 const uploadArquivos = multer({
     storage: storageArquivos,
     limits: {
-        fileSize: maxFileSize * 2 // 10MB para arquivos não-imagem
+        fileSize: maxFileSize * 2 
     },
     fileFilter: fileFilterArquivos
 });

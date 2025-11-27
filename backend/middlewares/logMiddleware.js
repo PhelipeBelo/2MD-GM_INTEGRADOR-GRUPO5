@@ -9,18 +9,15 @@ export const logMiddleware = async (req, res, next) => {
     const logData = {
         rota: req.originalUrl,
         metodo: req.method,
-        // Garante null se não achar o IP
         ip_address: (req.ip || req.connection.remoteAddress || req.socket.remoteAddress) || null,
-        // Garante null se não tiver User-Agent (AQUI ERA UM DOS ERROS)
         user_agent: req.get('User-Agent') || null,
         
-        // Preparamos o objeto, mas vamos converter para STRING apenas na hora de salvar
+
         _dados_requisicao_obj: {
             headers: {
                 'content-type': req.get('Content-Type') || null,
                 'authorization': req.get('Authorization') ? 'Bearer [REDACTED]' : null,
             },
-            // Sanitiza e garante que não é undefined
             body: req.method !== 'GET' ? sanitizeRequestBody(req.body) : null,
             query: Object.keys(req.query).length > 0 ? req.query : null
         }
@@ -30,7 +27,6 @@ export const logMiddleware = async (req, res, next) => {
         if (logRegistrado) return; 
         logRegistrado = true;
 
-        // Lógica para tratar dados da resposta (erro ou sucesso)
         let dadosRespostaObj = null;
 
         if (res.statusCode >= 400) {
@@ -52,16 +48,16 @@ export const logMiddleware = async (req, res, next) => {
             ip_address: logData.ip_address,
             user_agent: logData.user_agent,
             
-            // CRUCIAL: Converter Objeto JS para String JSON
+
             dados_requisicao: JSON.stringify(logData._dados_requisicao_obj),
             
             status_code: res.statusCode,
             tempo_resposta_ms: Date.now() - startTime,
             
-            // Garante NULL se não tiver ID (não pode ser undefined)
+
             gl_id: (req.usuario && req.usuario.id) ? req.usuario.id : null,
             
-            // CRUCIAL: Converter Objeto JS para String JSON ou NULL
+
             dados_resposta: dadosRespostaObj ? JSON.stringify(dadosRespostaObj) : null
         };
 
@@ -83,7 +79,7 @@ export const logMiddleware = async (req, res, next) => {
     next();
 };
 
-// ... Mantenha a função sanitizeRequestBody igual ...
+
 function sanitizeRequestBody(body) {
     if (!body || typeof body !== 'object') return body;
     try {
@@ -106,11 +102,11 @@ function sanitizeRequestBody(body) {
 }
 
 async function saveLog(logData) {
-    // O "create" agora receberá strings onde é JSON, e null onde é vazio.
+
     await create('logs', logData);
 }
 
 export const simpleLogMiddleware = (req, res, next) => {
-    // ... manter igual ...
+
     next();
 };

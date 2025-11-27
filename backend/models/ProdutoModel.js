@@ -6,7 +6,6 @@ class ProdutoModel {
     static async criar(dados) {
         const connection = await getConnection();
         try {
-            // Importante: Campos mapeados para o seu banco
             const sql = `INSERT INTO equipamentos_ga (nome, marca, serie, descricao, foto_url, eq_status) VALUES (?, ?, ?, ?, ?, ?)`;
             const [result] = await connection.query(sql, [
                 dados.nome, 
