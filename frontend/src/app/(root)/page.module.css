@@ -72,7 +72,7 @@ body, html {
   transform: translateX(100%);
 }
 
-/* --- ANIMAÇÃO DE DESENHO E LOGO --- */
+
 
 .factoryWrapper {
   width: 100%;
@@ -85,18 +85,17 @@ body, html {
   position: relative;
 }
 
-/* --- ANIMAÇÃO DA FÁBRICA --- */
+
 .factorySvg {
   position: absolute;
   width: 100%;
   height: 100%;
   opacity: 1;
   z-index: 1; 
-  /* SUMIR INSTANTANEAMENTE: Começa em 2.5s */
   animation: hideFactory 0.001s forwards 2.5s; 
 }
 
-/* Keyframe para desaparecimento forçado e imediato */
+
 @keyframes hideFactory {
   to {
     opacity: 0;
@@ -114,7 +113,7 @@ body, html {
   to { stroke-dashoffset: 0; }
 }
 
-/* Delays da Fábrica */
+
 .factorySvg #factory-main { animation-delay: 0s; }
 .factorySvg #factory-roof { animation-delay: 0.3s; }
 .factorySvg #water-tower-post-body { animation-delay: 0.8s; } 
@@ -125,7 +124,7 @@ body, html {
 .factorySvg #window4 { animation-delay: 1.3s; }
 .factorySvg #window5 { animation-delay: 1.4s; }
 
-/* Animação do Texto GM (Aparece, pulsa, e some com a fábrica) */
+
 .factorySvg #gm-logo-text {
   stroke-dasharray: 0; 
   stroke-dashoffset: 0;
@@ -139,23 +138,23 @@ body, html {
   50% { transform: scale(1.1); filter: drop-shadow(0 0 10px #ffd700); }
 }
 
-/* --- ANIMAÇÃO DA LOGO CHEVROLET --- */
+
 .chevyLogo {
   position: absolute;
-  width: 220px; /* Ajustado para melhor visualização */
-  height: 110px; /* Ajustado para melhor visualização */
+  width: 220px; 
+  height: 110px; 
   opacity: 0;
   transform: scale(0.5); 
-  z-index: 100; /* Garante que fique acima de tudo */
+  z-index: 100; 
   
-  /* Animação geral de fade-in e escalonamento */
+
   animation: fadeInChevyLogo 0.5s ease-out 2.5s forwards; 
 }
 
-/* Animação individual dos componentes da logo */
+
 .chevyLogo #chevy-outer-shape {
     opacity: 0;
-    animation: fadeElementIn 0.3s ease-out 2.5s forwards; /* Aparece primeiro */
+    animation: fadeElementIn 0.3s ease-out 2.5s forwards;
 }
 
 .chevyLogo #chevy-inner-gold-base {
@@ -171,20 +170,20 @@ body, html {
 .chevyLogo #chevy-highlight-top,
 .chevyLogo #chevy-highlight-bottom {
     opacity: 0;
-    animation: fadeElementIn 0.3s ease-out 3.0s forwards; /* Aparecem por último */
+    animation: fadeElementIn 0.3s ease-out 3.0s forwards; 
 }
 
-/* Keyframe genérico para fade-in */
+
 @keyframes fadeElementIn {
   to { opacity: 1; }
 }
 
-/* Keyframes para a animação geral da logo */
+
 @keyframes fadeInChevyLogo {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Animação de brilho que se aplica a todos os componentes relevantes */
+
 .chevyLogo #chevy-outer-shape,
 .chevyLogo #chevy-inner-gold-base,
 .chevyLogo #chevy-inner-gold-texture,
@@ -200,7 +199,7 @@ body, html {
 }
 
 
-/* --- MEDIA QUERIES --- */
+
 @media (max-width: 992px) {
   .loginContainer { flex-direction: column; min-height: 100vh; }
   .formPanelLeft, .formPanelRight, .overlayPanelLeft, .overlayPanelRight { width: 100%; height: auto; }

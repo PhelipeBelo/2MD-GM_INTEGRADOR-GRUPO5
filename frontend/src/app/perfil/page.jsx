@@ -20,7 +20,7 @@ import {
 
 export default function PagPerfil() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [user, setUser] = useState(null); // Estado inicial nulo
+    const [user, setUser] = useState(null);
     const menuRef = useRef(null);
     const router = useRouter();
 
@@ -37,8 +37,7 @@ export default function PagPerfil() {
         const token = localStorage.getItem('token');
 
         if (!token || !usuarioSalvo) {
-            // Se não tiver logado, manda de volta pro login
-            router.push('/'); 
+            router.push('/');
             return;
         }
 
@@ -47,17 +46,16 @@ export default function PagPerfil() {
         // 2. Mapear os dados do Banco (gl_ga) para a estrutura visual da tela
         setUser({
             nome: dadosBanco.nome,
-            id: dadosBanco.gmin,         // Mapeando 'gmin' do banco para 'id' da tela
+            id: dadosBanco.gmin,
             cargo: dadosBanco.cargo,
             email: dadosBanco.cadastro || "Sem e-mail",
             telefone: dadosBanco.telefone || "Sem telefone",
-            nascimento: formatarData(dadosBanco.nasc), // Formatando a data
-            setor: dadosBanco.area,      // Mapeando 'area' do banco para 'setor' da tela
-            planta: dadosBanco.planta,     // Mapeando 'planta' do banco para o campo visual (rótulo é Planta)
-            foto: dadosBanco.icon || `https://ui-avatars.com/api/?name=${encodeURIComponent(dadosBanco.nome)}&background=0d6efd&color=fff&size=128` // Fallback se não tiver ícone
+            nascimento: formatarData(dadosBanco.nasc),
+            setor: dadosBanco.area,
+            planta: dadosBanco.planta,
+            foto: dadosBanco.icon || `https://ui-avatars.com/api/?name=${encodeURIComponent(dadosBanco.nome)}&background=0d6efd&color=fff&size=128`
         });
 
-        // Lógica de fechar menu ao clicar fora
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setIsMenuOpen(false);
@@ -73,12 +71,10 @@ export default function PagPerfil() {
         router.push('/');
     };
 
-    // Enquanto carrega os dados do localStorage, não exibe nada (ou poderia ser um spinner)
     if (!user) return null;
 
     return (
         <>
-            {/* ===== HEADER ===== */}
             <header
                 className="border-bottom shadow-sm position-sticky top-0 z-3"
                 style={{
@@ -88,8 +84,8 @@ export default function PagPerfil() {
             >
                 <div className="container-fluid px-3 px-md-4 py-3 d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center gap-3">
-                        <button 
-                            onClick={() => router.back()} 
+                        <button
+                            onClick={() => router.back()}
                             className="btn btn-sm btn-outline-light border-0 rounded-circle p-2 d-flex align-items-center justify-content-center"
                         >
                             <FaArrowLeft />
@@ -124,7 +120,7 @@ export default function PagPerfil() {
                             <li><button className="dropdown-item gap-2 d-flex align-items-center active"><FaUserCircle /> Meus Dados</button></li>
                             <li><hr className="dropdown-divider" /></li>
                             <li>
-                                <button 
+                                <button
                                     className="dropdown-item text-danger gap-2 d-flex align-items-center"
                                     onClick={handleLogout}
                                 >
@@ -136,7 +132,6 @@ export default function PagPerfil() {
                 </div>
             </header>
 
-            {/* ===== CONTEÚDO PRINCIPAL ===== */}
             <main className="pagperfil-container">
                 <div className="container" style={{ maxWidth: "800px" }}>
 
@@ -147,19 +142,18 @@ export default function PagPerfil() {
                         </div>
                     </div>
 
-                    {/* CARD PRINCIPAL */}
                     <div className="profile-card">
 
-                        {/* Seção 1: Avatar e Nome */}
+
                         <div className="profile-header-section">
                             <div className="avatar-container">
-                                <img src={user.foto} alt="Profile" className="avatar-img" style={{objectFit: 'cover'}} />
+                                <img src={user.foto} alt="Profile" className="avatar-img" style={{ objectFit: 'cover' }} />
                             </div>
                             <div className="flex-grow-1">
                                 <h2 className="h4 fw-bold mb-1">{user.nome}</h2>
                                 <p className="text-muted mb-2">{user.cargo}</p>
 
-                                {/* ID Badge */}
+
                                 <div className="id-badge">
                                     <FaIdCard className="me-2" />
                                     ID: {user.id}
@@ -167,7 +161,7 @@ export default function PagPerfil() {
                             </div>
                         </div>
 
-                        {/* Seção 2: Informações Pessoais */}
+
                         <div className="info-section">
                             <div className="section-title">
                                 <span>Informações Pessoais</span>
@@ -194,10 +188,10 @@ export default function PagPerfil() {
                             </div>
                         </div>
 
-                        {/* Divisor */}
+
                         <div style={{ height: "12px", background: "#f5f8fa", borderTop: "1px solid #e7eef5", borderBottom: "1px solid #e7eef5" }}></div>
 
-                        {/* Seção 3: Contato */}
+
                         <div className="info-section">
                             <div className="section-title">
                                 <span>Informações de Contato</span>
@@ -214,7 +208,7 @@ export default function PagPerfil() {
                             </div>
                         </div>
 
-                        {/* Rodapé */}
+
                         <div className="bg-light p-3 text-center border-top">
                             <p className="text-muted small mb-0">
                                 Para alterar qualquer informação, entre em contato com o RH ou Administrador do Sistema.

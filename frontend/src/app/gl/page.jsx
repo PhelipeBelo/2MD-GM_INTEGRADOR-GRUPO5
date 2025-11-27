@@ -29,7 +29,7 @@ function ModalSolicitacao({ item, onConfirm, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true); // Trava o botão para não clicar 2x
+    setLoading(true); 
     onConfirm(item, localUso, () => setLoading(false));
   };
 
@@ -95,7 +95,6 @@ export default function PagGL() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // URL DO BACKEND (Ajuste se sua porta for diferente de 5000)
   const API_URL = "http://localhost:3001/api";
 
   // 1. VERIFICA LOGIN
@@ -110,8 +109,7 @@ export default function PagGL() {
 
     const dadosBanco = JSON.parse(usuarioSalvo);
     
-    // ATENÇÃO: Verifique se no seu login você salva 'gmin' ou 'id'
-    // Aqui estou assumindo que dadosBanco.id é o ID da tabela gl_ga
+
     setUser({
       nome: dadosBanco.nome,
       id: dadosBanco.id || dadosBanco.gmin, 
@@ -124,13 +122,11 @@ export default function PagGL() {
     if (!user) return;
     setLoadingDados(true);
 
-    try {
-      // Chama a rota que criamos no DashboardController
+    try {r
       const res = await fetch(`${API_URL}/gl/dashboard?userId=${user.id}`);
       
       if (res.ok) {
         const data = await res.json();
-        // Atualiza os estados com o que veio do banco
         setDisponiveis(data.disponiveis || []);
         setMeusEmprestimos(data.meusEmprestimos || []);
         setMinhasSolicitacoes(data.minhasSolicitacoes || []);
@@ -196,11 +192,11 @@ export default function PagGL() {
         throw new Error(erro.erro || "Erro ao processar");
       }
 
-      // Sucesso! Atualiza a tela sem precisar dar F5
+
       const novaSolicitacao = {
-        id: Date.now(), // ID temporário visual
+        id: Date.now(), 
         item: item.nome,
-        data: new Date().toLocaleDateString(), // Data de hoje
+        data: new Date().toLocaleDateString(), 
         status: "Pendente"
       };
 
@@ -215,13 +211,13 @@ export default function PagGL() {
 
     } catch (error) {
       setToast({ type: "danger", message: error.message });
-      stopLoading(); // Destrava o botão do modal
+      stopLoading(); 
     }
   };
 
   const fecharToast = () => setToast(null);
 
-  if (!user) return null; // Espera carregar user
+  if (!user) return null; 
 
   return (
     <>
@@ -316,7 +312,6 @@ export default function PagGL() {
                 </div>
                 <div className="border-start mx-1"></div>
                 <div>
-                  {/* Filtra apenas os pendentes para exibir no contador */}
                   <h4 className="mb-0 text-warning">{minhasSolicitacoes.filter(s => s.status === "Pendente").length}</h4>
                   <small className="text-muted">Pendentes</small>
                 </div>
@@ -346,7 +341,6 @@ export default function PagGL() {
           </div>
         ) : (
           <div className="row">
-            {/* ABA CATÁLOGO (Disponíveis) */}
             {abaAtiva === "catalogo" && (
               <div className="col-12">
                 {disponiveis.length === 0 ? (
@@ -383,7 +377,6 @@ export default function PagGL() {
               </div>
             )}
 
-            {/* ABA MEUS EMPRÉSTIMOS (Em Uso) */}
             {abaAtiva === "meus" && (
               <div className="col-12">
                 {meusEmprestimos.length === 0 ? (
@@ -412,8 +405,6 @@ export default function PagGL() {
                 )}
               </div>
             )}
-
-            {/* ABA SOLICITAÇÕES (Histórico) */}
             {abaAtiva === "solicitacoes" && (
               <div className="col-12">
                 <div className="row g-3">

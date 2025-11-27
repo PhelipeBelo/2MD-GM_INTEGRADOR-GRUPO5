@@ -2,7 +2,7 @@
    PAGADMIN.CSS - Estilos Globais e Componentes
    ========================================================================== */
 
-/* Animação do Logo */
+
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -18,7 +18,7 @@
   }
 }
 
-/* Layout Principal */
+
 .pagadmin-container {
   background-color: #edf6ff;
   min-height: 100vh;
@@ -32,43 +32,43 @@
    HEADER E MENU DE USUÁRIO (CORRIGIDOS)
    ========================================================================== */
 
-/* Ajuste da margem do dropdown para não grudar no botão */
+
 .margem_menu {
   margin-top: 0.75rem !important;
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Botão do Usuário (Estado Normal) */
+
 .btn.user-menu-button {
   transition: all 0.3s ease;
-  color: #ffffff !important; /* Texto branco */
-  border: 1px solid rgba(255, 255, 255, 0.4); /* Borda branca suave */
+  color: #ffffff !important; 
+  border: 1px solid rgba(255, 255, 255, 0.4); 
   background-color: transparent;
   box-shadow: none;
 }
 
-/* Garante que o texto "Administrador" seja branco */
+
 .btn.user-menu-button .fw-semibold {
   color: #ffffff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Leve sombra para leitura */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
 }
 
-/* Ícone de seta */
+
 .btn.user-menu-button svg {
   opacity: 0.9;
 }
 
-/* Estado: HOVER e MENU ABERTO (aria-expanded=true) */
+
 .btn.user-menu-button:hover,
 .btn.user-menu-button[aria-expanded="true"] {
-  background-color: rgba(255, 255, 255, 0.2); /* Fundo branco translúcido */
+  background-color: rgba(255, 255, 255, 0.2); 
   border-color: #ffffff;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
   color: #ffffff !important;
 }
 
-/* Estado: CLIQUE */
+
 .btn.user-menu-button:active {
   transform: scale(0.97);
   background-color: rgba(255, 255, 255, 0.3) !important;
@@ -116,7 +116,7 @@
   transform: scale(1.02);
 }
 
-/* Botões e Chips */
+
 .chip {
   border: none;
   border-radius: 30px;
@@ -187,18 +187,18 @@
    CARDS (Equipamentos, Solicitações, Em Uso)
    ========================================================================== */
 
-/* Card Base */
+
 .card-card {
   background: #fff;
   border-radius: 18px;
   overflow: hidden;
   transition: all 0.2s ease-in-out;
   border: 1px solid #e7eef5;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Sombra suave */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); 
 }
 
 .card-card:hover {
-  transform: translateY(-4px); /* Efeito de levitar */
+  transform: translateY(-4px); 
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
@@ -221,7 +221,7 @@
   color: #333;
 }
 
-/* Botões de Ação nos Cards */
+
 .actions button {
   border-radius: 8px;
   transition: 0.2s;
@@ -231,7 +231,7 @@
   transform: scale(1.1);
 }
 
-/* Card de Solicitação / Em Uso */
+
 .request-card {
   background: #fff;
   border-radius: 14px;
@@ -256,7 +256,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(3px); /* Desfoque no fundo */
+  backdrop-filter: blur(3px); 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,7 +270,7 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efeito elástico */
+  animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
 }
 
 @keyframes modalPop {
@@ -345,7 +345,6 @@
     margin: 10px;
   }
   
-  /* Ajuste para o menu não vazar no mobile */
   .dropdown-menu.margem_menu {
       right: 0 !important;
       left: auto !important;

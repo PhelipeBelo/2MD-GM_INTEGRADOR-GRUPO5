@@ -34,12 +34,11 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
 
   useEffect(() => {
     if (initialData) {
-      // CORREÇÃO IMPORTANTE: Usamos || "" para evitar erro de input uncontrolled
       setFormData({
         id: initialData.id || null,
         nome: initialData.nome || "",
-        categoria: initialData.categoria || "", // Visualmente é categoria, no banco será marca
-        codigo: initialData.codigo || "",       // Visualmente é código, no banco será série
+        categoria: initialData.categoria || "", 
+        codigo: initialData.codigo || "",       
         descricao: initialData.descricao || "", 
         foto_url: initialData.foto_url || "",         
         status: initialData.status || "Disponível",
@@ -135,7 +134,7 @@ export default function PagAdmin() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // CONFIGURAÇÃO DA API (Porta 3001)
+  
   const API_URL = "http://localhost:3001/api";
 
   useEffect(() => {
@@ -194,8 +193,7 @@ export default function PagAdmin() {
     try {
       let url = `${API_URL}/produtos`; 
       let method = 'POST';
-
-      // TRADUÇÃO DOS CAMPOS: Front (categoria/codigo) -> Back (marca/serie)
+      
       const payload = {
         nome: dadosForm.nome,
         marca: dadosForm.categoria, 
