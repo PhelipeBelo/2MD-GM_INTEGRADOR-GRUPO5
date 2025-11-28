@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/navigation';
@@ -13,16 +13,13 @@ export default function LoginPage() {
     const [employee, setEmployee] = useState(null);
     const router = useRouter();
 
-    const handleLoginClick = () => {
-        setIsOverlayVisible(false);
-    };
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsOverlayVisible(false);
+        }, 3500);
 
-    const handleBackClick = () => {
-        setIsOverlayVisible(true);
-        setRegistro('');
-        setEmployee(null);
-        setError('');
-    };
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleBuscarUsuario = async () => {
         if (registro.trim() === '') return;
@@ -140,15 +137,6 @@ export default function LoginPage() {
                     >
                         {isLoading ? 'Buscando...' : (employee ? 'Entrar no Sistema' : 'Validar')}
                     </button>
-
-                    <button
-                        type="button"
-                        className="btn btn-link mt-3"
-                        onClick={handleBackClick}
-                        style={{ color: '#1d5fa0', textDecoration : 'none'}}
-                    >
-                        Voltar
-                    </button>
                 </form>
             </div>
 
@@ -156,10 +144,7 @@ export default function LoginPage() {
 
             <div className={styles.overlayContainer}>
                 <div className={styles.overlayPanelLeft}>
-                
-
                     <div className={styles.factoryWrapper}>
-
                         <svg className={styles.factorySvg} viewBox="0 0 340 250">
                             <g fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                                 <rect id="factory-main" x="20" y="120" width="300" height="100" />
@@ -177,7 +162,6 @@ export default function LoginPage() {
 
                         <svg className={styles.chevyLogo} viewBox="0 0 300 120">
                             <defs>
-
                                 <linearGradient id="chromeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                                     <stop offset="0%" stopColor="#F0F0F0"/>
                                     <stop offset="20%" stopColor="#C0C0C0"/>
@@ -185,20 +169,16 @@ export default function LoginPage() {
                                     <stop offset="80%" stopColor="#C0C0C0"/>
                                     <stop offset="100%" stopColor="#F0F0F0"/>
                                 </linearGradient>
-
                                 <linearGradient id="goldBack" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stopColor="#FFD700"/>
                                     <stop offset="50%" stopColor="#E6AC00"/>
                                     <stop offset="100%" stopColor="#FFD700"/>
                                 </linearGradient>
-
-  
                                 <pattern id="goldDots" patternUnits="userSpaceOnUse" width="3" height="3">
                                     <rect width="3" height="3" fill="#FFD700" />
                                     <rect x="0" y="0" width="1.5" height="1.5" fill="#B8860B" opacity="0.4" />
                                     <rect x="1.5" y="1.5" width="1.5" height="1.5" fill="#B8860B" opacity="0.4" />
                                 </pattern>
-
                                 <filter id="bevelEffect" x="-20%" y="-20%" width="140%" height="140%">
                                     <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
                                     <feSpecularLighting in="blur" surfaceScale="2" specularConstant="1" specularExponent="15" lightingColor="white" result="specOut">
@@ -208,44 +188,14 @@ export default function LoginPage() {
                                     <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litPaint"/>
                                 </filter>
                             </defs>
-                            
                             <g>
-                                <path 
-                                    id="chevy-outer-chrome" 
-                                    d="M120 10 L180 10 L180 35 L280 35 L295 65 L180 65 L180 90 L120 90 L120 65 L20 65 L5 35 L120 35 Z"
-                                    fill="url(#chromeGradient)" 
-                                    stroke="#555"
-                                    strokeWidth="1"
-                                    filter="url(#bevelEffect)"
-                                />
-                                <path 
-                                    id="chevy-inner-gold-base" 
-                                    d="M125 15 L175 15 L175 40 L275 40 L285 60 L175 60 L175 85 L125 85 L125 60 L25 60 L15 40 L125 40 Z"
-                                    fill="url(#goldBack)" 
-                                />
-                                <path 
-                                    id="chevy-inner-gold-texture" 
-                                    d="M125 15 L175 15 L175 40 L275 40 L285 60 L175 60 L175 85 L125 85 L125 60 L25 60 L15 40 L125 40 Z"
-                                    fill="url(#goldDots)" 
-                                />
-                                <path 
-                                    id="chevy-highlight" 
-                                    d="M120 10 L180 10 M120 90 L180 90" 
-                                    fill="none" 
-                                    stroke="rgba(255,255,255,0.8)" 
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                />
-
+                                <path id="chevy-outer-chrome" d="M120 10 L180 10 L180 35 L280 35 L295 65 L180 65 L180 90 L120 90 L120 65 L20 65 L5 35 L120 35 Z" fill="url(#chromeGradient)" stroke="#555" strokeWidth="1" filter="url(#bevelEffect)"/>
+                                <path id="chevy-inner-gold-base" d="M125 15 L175 15 L175 40 L275 40 L285 60 L175 60 L175 85 L125 85 L125 60 L25 60 L15 40 L125 40 Z" fill="url(#goldBack)" />
+                                <path id="chevy-inner-gold-texture" d="M125 15 L175 15 L175 40 L275 40 L285 60 L175 60 L175 85 L125 85 L125 60 L25 60 L15 40 L125 40 Z" fill="url(#goldDots)" />
+                                <path id="chevy-highlight" d="M120 10 L180 10 M120 90 L180 90" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round"/>
                             </g>
                         </svg>
                     </div>
-
-                    <button
-                        className="btn btn-outline-light btn-lg mt-3"
-                        onClick={handleLoginClick}>
-                        Entrar
-                    </button>
                 </div>
             </div>
         </main>
