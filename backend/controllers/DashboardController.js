@@ -21,6 +21,40 @@ class DashboardController {
         }
     }
 
+     // POST /api/gl/dashboard
+    static async criarSolicitacao(req, res) {
+        try {
+            const { equipamento_id, local_uso, usuario_id } = req.body;
+
+            if (!equipamento_id || !usuario_id || !local_uso) {
+                return res.status(400).json({ erro: 'Dados incompletos' });
+            }
+
+            const estaLivre = await DashboardModel.verificarDisponibilidade(equipamento_id);
+
+            if (!estaLivre) {
+                return res.status(409).json({ // 409 = Conflict
+                    erro: 'Este equipamento já foi solicitado por outra pessoa ou já está em uso.' 
+                });
+            }
+
+            await DashboardModel.criarSolicitacao({
+                equipamento_id,
+                usuario_id,
+                local_uso
+            });
+
+            return res.status(201).json({ mensagem: 'Solicitação criada!' });
+
+        } catch (error) {
+            console.error('Erro ao criar solicitação:', error);
+            if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+                return res.status(400).json({ erro: 'Usuário não encontrado.' });
+            }
+            return res.status(500).json({ erro: 'Erro ao salvar' });
+        }
+    }
+
     static async criarSolicitacao(req, res) {
         try {
             const { equipamento_id, local_uso, usuario_id } = req.body;
@@ -57,9 +91,15 @@ class DashboardController {
             
             await DashboardModel.atualizarStatusSolicitacao(id, status);
             return res.status(200).json({ mensagem: `Solicitação ${status}!` });
+
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao processar' });
+            console.error('Erro ao responder solicitação:', error.message);
+
+            if (error.message.includes("BLOQUEIO")) {
+                return res.status(409).json({ erro: "⚠️ Impossível aprovar: O item já está em uso!" });
+            }
+            
+            return res.status(500).json({ erro: 'Erro interno ao processar.' });
         }
     }
 
