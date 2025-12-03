@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-// 1. ADICIONADO: Import do Socket.io
 import io from 'socket.io-client'; 
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -18,11 +17,29 @@ import {
   FaUserCircle,
   FaSignOutAlt,
   FaChevronDown,
+  FaSearch, 
+  FaFilter 
 } from "react-icons/fa";
 import Link from "next/link";
 
+// =================================================================
+// 0. HOOK DE DEBOUNCE
+// =================================================================
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 // -----------------------------------------------------------------
-// 1. COMPONENTE DO FORMULÁRIO (SEM ALTERAÇÕES)
+// 1. COMPONENTE DO FORMULÁRIO (MANTIDO)
 // -----------------------------------------------------------------
 function FormEquipamento({ onSave, onCancel, initialData }) {
   const [formData, setFormData] = useState({
@@ -103,6 +120,8 @@ function FormEquipamento({ onSave, onCancel, initialData }) {
           <label htmlFor="status" className="form-label">Status</label>
           <select className="form-select" id="status" name="status" value={formData.status || "Disponível"} onChange={handleChange} disabled={formData.status === "Em Uso"}>
             <option value="Disponível">Disponível</option>
+            <option value="Manutenção">Manutenção</option>
+            <option value="Indisponível">Indisponível</option>
             {formData.status === "Em Uso" && (
               <option value="Em Uso" disabled>Em Uso (Controlado por Solicitações)</option>
             )}
@@ -130,6 +149,14 @@ export default function PagAdmin() {
   const [emUso, setEmUso] = useState([]);
 
   const [abaAtiva, setAbaAtiva] = useState("equipamentos");
+  
+  // --- FILTROS ---
+  const [busca, setBusca] = useState("");
+  const buscaDebounced = useDebounce(busca, 300);
+  
+  const [filtroMarca, setFiltroMarca] = useState("");
+  const [filtroStatus, setFiltroStatus] = useState("");
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [toast, setToast] = useState(null);
@@ -138,50 +165,31 @@ export default function PagAdmin() {
   const menuRef = useRef(null);
 
   const API_URL = "http://localhost:3001/api";
-  const SOCKET_URL = "http://localhost:3010"; // URL do servidor Socket
+  const SOCKET_URL = "http://localhost:3010"; 
 
-  // -----------------------------------------------------------------
-  // 2.1 ADICIONADO: Lógica do Socket para Atualização em Tempo Real
-  // -----------------------------------------------------------------
+  // Socket
   useEffect(() => {
-    // Conecta ao servidor Socket
     const socket = io(SOCKET_URL);
-
-    // Ouve o evento 'atualizacao_dados' que o backend envia a cada 10s
     socket.on('atualizacao_dados', (data) => {
-      console.log("Socket: Dados recebidos", data);
-      
-      // Verifica se o backend mandou os dados e atualiza os estados
-      // O backend precisa mandar um objeto com { equipamentos, solicitacoes, emUso }
       if (data) {
         if (data.equipamentos) setEquipamentos(data.equipamentos);
         if (data.solicitacoes) setSolicitacoes(data.solicitacoes);
         if (data.emUso) setEmUso(data.emUso);
-        
-        // Opcional: Feedback visual discreto no console ou toast
-        // setToast({ type: "success", message: "Dados atualizados em tempo real." });
       }
     });
-
-    // Limpeza ao sair da página para não duplicar conexões
     return () => {
       socket.disconnect();
     };
-  }, []); // Array vazio garante que só conecta uma vez ao carregar a página
+  }, []);
 
-  // -----------------------------------------------------------------
-  // FIM DA LÓGICA DO SOCKET
-  // -----------------------------------------------------------------
-
+  // Auth
   useEffect(() => {
     const usuarioSalvo = localStorage.getItem('usuario');
     const token = localStorage.getItem('token');
-
     if (!token || !usuarioSalvo) {
       router.push('/');
       return;
     }
-
     const dadosBanco = JSON.parse(usuarioSalvo);
     setUser({
       nome: dadosBanco.nome,
@@ -190,7 +198,6 @@ export default function PagAdmin() {
   }, [router]);
 
   const fetchDadosAdmin = async () => {
-    // setLoading(true); // Com socket, podemos evitar loaders constantes se desejado
     try {
       const res = await fetch(`${API_URL}/admin/dashboard`);
       if (res.ok) {
@@ -202,7 +209,6 @@ export default function PagAdmin() {
         setToast({ type: "danger", message: "Erro ao carregar dados do servidor." });
       }
     } catch (error) {
-      console.error(error);
       setToast({ type: "danger", message: "Falha na conexão com a API." });
     } finally {
       setLoading(false);
@@ -223,8 +229,36 @@ export default function PagAdmin() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuRef]);
 
-  // --- AÇÕES ---
+  // -----------------------------------------------------------------
+  // CORREÇÃO DOS FILTROS
+  // -----------------------------------------------------------------
+  
+  // 1. Extrair Marcas Reais do Banco
+  const marcasUnicas = [...new Set(equipamentos.map(e => e.categoria))].filter(Boolean).sort();
+  
+  // 2. Extrair Status Reais do Banco (AQUI É A CORREÇÃO PRINCIPAL)
+  // Ao invés de uma lista fixa, pegamos o que está gravado no banco.
+  // Isso evita erros de digitação (Ex: "Disponivel" vs "Disponível")
+  const statusUnicos = [...new Set(equipamentos.map(e => e.status))].filter(Boolean).sort();
 
+  const equipamentosFiltrados = equipamentos.filter((eq) => {
+    const termo = buscaDebounced.toLowerCase();
+    
+    // Busca
+    const matchBusca = 
+        (eq.nome && eq.nome.toLowerCase().includes(termo)) || 
+        (eq.codigo && eq.codigo.toLowerCase().includes(termo));
+    
+    // Filtro Marca
+    const matchMarca = filtroMarca === "" || eq.categoria === filtroMarca;
+
+    // Filtro Status (Comparação exata)
+    const matchStatus = filtroStatus === "" || eq.status === filtroStatus;
+
+    return matchBusca && matchMarca && matchStatus;
+  });
+
+  // --- AÇÕES ---
   const salvarEquipamento = async (dadosForm) => {
     try {
       let url = `${API_URL}/produtos`;
@@ -236,7 +270,7 @@ export default function PagAdmin() {
         serie: dadosForm.codigo,
         descricao: dadosForm.descricao,
         foto_url: dadosForm.foto_url,
-        status: dadosForm.status || 'Disponível'
+        status: dadosForm.status || 'Disponível',
       };
 
       if (dadosForm.id) {
@@ -289,14 +323,11 @@ export default function PagAdmin() {
   const aprovarSolicitacao = async (id) => {
     try {
       const res = await fetch(`${API_URL}/gl/solicitacoes/${id}/aprovar`, { method: 'POST' });
-      
       const data = await res.json();
-
       if (res.ok) {
         setToast({ type: "success", message: `✅ Solicitação aprovada!` });
         fetchDadosAdmin();
       } else {
-
         setToast({ type: "danger", message: data.erro || "Erro ao aprovar." });
       }
     } catch (error) {
@@ -406,28 +437,74 @@ export default function PagAdmin() {
         {loading ? <div className="text-center py-5"><div className="spinner-border text-primary"></div></div> : (
           <div className="row">
             {abaAtiva === "equipamentos" && (
-              <div className="col-12"><div className="row g-4">{equipamentos.map((eq) => (
-                <div className="col-md-6 col-lg-4" key={eq.id}>
-                  <article className="card-card h-100">
-                    <div className="card-top" style={{ background: "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))" }}>
-                      <div className="card-icon"><FaBoxes size={28} /></div>
-                      <div className="card-quick"><small className="text-light d-block mt-1">{eq.categoria} · {eq.codigo}</small></div>
-                    </div>
-                    <div className="card-body p-3">
-                      <h5 className="card-title mb-1">{eq.nome}</h5>
-                      <span className={`badge ${eq.status === "Disponível" ? "bg-success" : eq.status === "Em Uso" ? "bg-warning text-dark" : "bg-danger"}`}>{eq.status}</span>
-                      <p className="text-muted small mb-2 mt-2"><FaInfoCircle className="me-1" /> Local: <strong>{eq.local || "Almoxarifado"}</strong></p>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <div className="actions">
-                          <button className="btn btn-sm btn-outline" onClick={() => abrirModal("editarEquip", eq)}><FaEdit /></button>
-                          <button className="btn btn-sm btn-danger ms-2" onClick={() => excluirEquipamento(eq.id)}><FaTimes /></button>
-                        </div>
+              <div className="col-12">
+                
+                {/* --- BARRA DE FILTROS --- */}
+                <div className="bg-white p-3 rounded-4 mb-4 shadow-sm border border-light">
+                  <div className="row g-2">
+                    {/* Busca */}
+                    <div className="col-lg-6 col-12">
+                      <div className="position-relative">
+                        <FaSearch className="position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary" />
+                        <input type="text" className="form-control ps-5 rounded-pill bg-light border-0" placeholder="Buscar nome ou código..." value={busca} onChange={(e) => setBusca(e.target.value)} />
+                        {busca && (<button className="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2 text-secondary" onClick={() => setBusca("")}><FaTimes /></button>)}
                       </div>
                     </div>
-                  </article>
+                    
+                    {/* Filtro Marca */}
+                    <div className="col-lg-3 col-md-6 col-12">
+                      <div className="position-relative">
+                        <FaFilter className="position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary z-1" style={{fontSize: '0.8rem'}} />
+                        <select className="form-select ps-5 rounded-pill bg-light border-0 cursor-pointer" value={filtroMarca} onChange={(e) => setFiltroMarca(e.target.value)}>
+                          <option value="">Todas as Marcas</option>
+                          {marcasUnicas.map((m, i) => <option key={i} value={m}>{m}</option>)}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Filtro Status (CORRIGIDO: PUXA DO BANCO) */}
+                    <div className="col-lg-3 col-md-6 col-12">
+                       <div className="position-relative">
+                        <FaInfoCircle className="position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary z-1" style={{fontSize: '0.8rem'}} />
+                        <select className="form-select ps-5 rounded-pill bg-light border-0 cursor-pointer" value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value)}>
+                          <option value="">Todos Status</option>
+                          {statusUnicos.map((s, i) => <option key={i} value={s}>{s}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              ))}</div></div>
+
+                {/* LISTAGEM (CARDS ORIGINAIS) */}
+                <div className="row g-4">
+                  {equipamentosFiltrados.length === 0 ? (
+                    <div className="text-center py-5 text-muted col-12">Nenhum equipamento encontrado com os filtros atuais.</div>
+                  ) : (
+                    equipamentosFiltrados.map((eq) => (
+                    <div className="col-md-6 col-lg-4" key={eq.id}>
+                      <article className="card-card h-100">
+                        <div className="card-top" style={{ background: "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))" }}>
+                          <div className="card-icon"><FaBoxes size={28} /></div>
+                          <div className="card-quick"><small className="text-light d-block mt-1">{eq.categoria} · {eq.codigo}</small></div>
+                        </div>
+                        <div className="card-body p-3">
+                          <h5 className="card-title mb-1">{eq.nome}</h5>
+                          <span className={`badge ${eq.status === "Disponível" ? "bg-success" : eq.status === "Em Uso" ? "bg-warning text-dark" : "bg-danger"}`}>{eq.status}</span>
+                          <p className="text-muted small mb-2 mt-2"><FaInfoCircle className="me-1" /> Local: <strong>{eq.local || "Almoxarifado"}</strong></p>
+                          <div className="d-flex justify-content-between align-items-center mt-3">
+                            <div className="actions">
+                              <button className="btn btn-sm btn-outline" onClick={() => abrirModal("editarEquip", eq)}><FaEdit /></button>
+                              <button className="btn btn-sm btn-danger ms-2" onClick={() => excluirEquipamento(eq.id)}><FaTimes /></button>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                  )))}
+                </div>
+              </div>
             )}
+            
             {abaAtiva === "solicitacoes" && (
               <div className="col-12"><div className="row g-4">
                 {solicitacoes.length === 0 ? <div className="text-center py-5 text-muted col-12">Nenhuma solicitação pendente.</div> :
@@ -446,6 +523,7 @@ export default function PagAdmin() {
                     </div>
                   ))}</div></div>
             )}
+
             {abaAtiva === "emuso" && (
               <div className="col-12"><div className="row g-4">{emUso.map((e) => (
                 <div className="col-md-6 col-lg-4" key={e.id}>

@@ -355,3 +355,53 @@
 .text-none{
   text-decoration: none;
 }
+
+/* ==========================================================================
+   ESTILOS DOS FILTROS (NOVO)
+   ========================================================================== */
+
+/* Remove o outline azul padrão para um visual mais limpo */
+.form-control:focus, 
+.form-select:focus {
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1); 
+  border-color: #dee2e6;
+  background-color: #ffffff !important;
+}
+
+/* Cursor pointer para selects */
+.form-select.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Inputs de texto com transição suave */
+input[type="text"] {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Botões dentro dos cards de admin */
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+/* Selects e Inputs dos Filtros */
+.form-select.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Remove o outline padrão ao clicar */
+.form-control:focus, 
+.form-select:focus {
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1); 
+  border-color: #dee2e6;
+  background-color: #ffffff !important;
+}
+
+/* Transição suave */
+input[type="text"], select {
+  transition: all 0.2s ease-in-out;
+}

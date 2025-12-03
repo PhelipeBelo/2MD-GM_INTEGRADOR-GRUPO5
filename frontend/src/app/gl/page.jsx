@@ -24,6 +24,27 @@ import {
 } from "react-icons/fa";
 import Link from "next/link";
 
+// =================================================================
+// 0. HOOK DE DEBOUNCE (NOVA ADIÇÃO)
+// =================================================================
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    // Configura o timer para atualizar o valor após o delay
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    // Limpa o timer se o valor mudar antes do delay terminar (usuário digitou dnv)
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 // -----------------------------------------------------------------
 // 1. COMPONENTE MODAL DE SOLICITAÇÃO (MANTIDO IGUAL)
 // -----------------------------------------------------------------
@@ -94,9 +115,13 @@ export default function PagGL() {
   const [minhasSolicitacoes, setMinhasSolicitacoes] = useState([]);
   const [loadingDados, setLoadingDados] = useState(true);
 
-  // --- NOVOS ESTADOS PARA BUSCA E FILTRO ---
-  const [busca, setBusca] = useState("");
+  // --- ESTADOS DE BUSCA ---
+  const [busca, setBusca] = useState(""); // Valor do Input (Instantâneo)
   const [filtroMarca, setFiltroMarca] = useState("");
+  
+  // --- APLICAÇÃO DO DEBOUNCE ---
+  // A buscaDebounced só atualiza 500ms depois que o usuário PARAR de digitar
+  const buscaDebounced = useDebounce(busca, 500); 
 
   const [modalOpen, setModalOpen] = useState(false);
   const [itemSelecionado, setItemSelecionado] = useState(null);
@@ -107,7 +132,7 @@ export default function PagGL() {
   const SOCKET_URL = "http://localhost:3010";
 
   // -----------------------------------------------------------------
-  // 2.1 LÓGICA DO SOCKET (MANTIDA ORIGINAL)
+  // LÓGICA DO SOCKET
   // -----------------------------------------------------------------
   useEffect(() => {
     if (!user) return;
@@ -116,14 +141,10 @@ export default function PagGL() {
 
     socket.on('atualizacao_dados', (data) => {
       if (data) {
-        
-        // 1. Atualiza Catálogo (SEM MEXER NA ESTRUTURA)
         if (data.equipamentos) {
           const apenasDisponiveis = data.equipamentos.filter(eq => eq.status === 'Disponível');
           setDisponiveis(apenasDisponiveis);
         }
-
-        // 2. Atualiza Meus Empréstimos
         if (data.emUso) {
           const meusItens = data.emUso
             .filter(eq => eq.usuario === user.nome)
@@ -135,8 +156,6 @@ export default function PagGL() {
             }));
           setMeusEmprestimos(meusItens);
         }
-
-        // 3. Atualiza Minhas Solicitações
         if (data.solicitacoes && data.emUso) {
             const minhasPendentes = data.solicitacoes
                 .filter(s => s.usuario === user.nome)
@@ -145,7 +164,6 @@ export default function PagGL() {
                     item: s.equipamentoNome,
                     data: s.data_criacao
                 }));
-
             const minhasAprovadas = data.emUso
                 .filter(e => e.usuario === user.nome)
                 .map(e => ({
@@ -154,7 +172,6 @@ export default function PagGL() {
                     data: e.dataInicio,
                     status: 'Aprovado' 
                 }));
-
             setMinhasSolicitacoes([...minhasPendentes, ...minhasAprovadas]);
         }
       }
@@ -166,19 +183,16 @@ export default function PagGL() {
   }, [user]); 
 
   // -----------------------------------------------------------------
-  // FETCH INICIAL (MANTIDO ORIGINAL)
+  // FETCH E USER
   // -----------------------------------------------------------------
   useEffect(() => {
     const usuarioSalvo = localStorage.getItem('usuario');
     const token = localStorage.getItem('token');
-
     if (!token || !usuarioSalvo) {
       router.push('/');
       return;
     }
-
     const dadosBanco = JSON.parse(usuarioSalvo);
-
     setUser({
       nome: dadosBanco.nome,
       id: dadosBanco.id || dadosBanco.gmin,
@@ -188,13 +202,10 @@ export default function PagGL() {
 
   const fetchDados = async () => {
     if (!user) return;
-    
     try {
       const res = await fetch(`${API_URL}/gl/dashboard?userId=${user.id}`);
-
       if (res.ok) {
         const data = await res.json();
-        // Carrega exatamente o que veio do banco, sem inventar moda
         setDisponiveis(data.disponiveis || []);
         setMeusEmprestimos(data.meusEmprestimos || []);
         setMinhasSolicitacoes(data.minhasSolicitacoes || []);
@@ -212,7 +223,6 @@ export default function PagGL() {
     fetchDados();
   }, [user]);
 
-  // (Lógica de menus e modal mantida...)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -266,8 +276,7 @@ export default function PagGL() {
       setMinhasSolicitacoes([novaSolicitacao, ...minhasSolicitacoes]);
       setDisponiveis((prev) => prev.filter((i) => i.id !== item.id));
       setBusca(""); 
-      setFiltroMarca(""); // Reseta filtro ao solicitar
-
+      setFiltroMarca(""); 
       setToast({ type: "success", message: `✅ Solicitação enviada: ${item.nome}` });
       fecharModal();
 
@@ -280,26 +289,21 @@ export default function PagGL() {
   const fecharToast = () => setToast(null);
 
   // -----------------------------------------------------------------
-  // LÓGICA DE FILTRO LIMPA (USA O QUE TEM NO BANCO)
+  // LÓGICA DE FILTRO (AGORA USANDO O DEBOUNCE)
   // -----------------------------------------------------------------
 
-  // 1. Pega as marcas únicas diretas do array 'disponiveis'.
-  // Se 'marca' não existir, tenta pegar 'categoria' (caso o banco use esse campo p/ marca).
   const marcasNoBanco = [...new Set(disponiveis.map(eq => eq.marca || eq.categoria))].filter(Boolean).sort();
 
-  // 2. Filtra a lista para exibição
   const itensFiltrados = disponiveis.filter((eq) => {
-    const termo = busca.toLowerCase();
+    // AQUI É A MUDANÇA: Usamos buscaDebounced em vez de busca
+    const termo = buscaDebounced.toLowerCase(); 
     
-    // Busca Texto (Nome, Código ou Categoria)
     const matchTexto = (
       (eq.nome && eq.nome.toLowerCase().includes(termo)) ||
       (eq.codigo && eq.codigo.toLowerCase().includes(termo)) ||
       (eq.categoria && eq.categoria.toLowerCase().includes(termo))
     );
 
-    // Filtro de Marca (Se selecionado)
-    // Verifica se a marca OU a categoria batem com o filtro (para cobrir os dois casos)
     const matchMarca = filtroMarca === "" || (eq.marca === filtroMarca) || (eq.categoria === filtroMarca);
 
     return matchTexto && matchMarca;
@@ -310,13 +314,8 @@ export default function PagGL() {
 
   return (
     <>
-      <header
-        className="border-bottom shadow-sm position-sticky top-0 z-3"
-        style={{
-          background: "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))",
-          color: "white",
-        }}
-      >
+      <header className="border-bottom shadow-sm position-sticky top-0 z-3" style={{ background: "linear-gradient(135deg, rgba(3,102,204,0.95), rgba(0,176,255,0.85))", color: "white" }}>
+        {/* Header mantido igual */}
         <div className="container-fluid px-3 px-md-4 py-3 d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2 gap-md-3">
             <div className="d-flex align-items-center justify-content-center rounded-circle" style={{ width: "48px", height: "48px", background: "rgba(255,255,255,0.15)", boxShadow: "0 0 10px rgba(255,255,255,0.2)" }}>
@@ -356,7 +355,6 @@ export default function PagGL() {
           </div>
         )}
 
-        {/* OVERVIEW PANEL MANTIDO IGUAL */}
         <div className="row mb-4 gx-3">
           <div className="col-12">
             <div className="overview-panel p-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
@@ -399,7 +397,7 @@ export default function PagGL() {
                 <div className="bg-white p-3 rounded-4 mb-4 shadow-sm border border-light">
                   <div className="row g-2 align-items-center">
                     
-                    {/* Campo de Texto */}
+                    {/* Campo de Texto (INPUT MANTÉM 'busca' para ser rápido) */}
                     <div className="col-md-8 col-12">
                       <div className="position-relative">
                         <FaSearch className="position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary" />
@@ -407,7 +405,7 @@ export default function PagGL() {
                           type="text"
                           className="form-control ps-5 py-2 rounded-pill bg-light border-0"
                           placeholder="Buscar por nome ou código..."
-                          value={busca}
+                          value={busca} 
                           onChange={(e) => setBusca(e.target.value)}
                         />
                         {busca && (
@@ -416,7 +414,7 @@ export default function PagGL() {
                       </div>
                     </div>
 
-                    {/* Select de Marca (Puxando direto do banco) */}
+                    {/* Select de Marca */}
                     <div className="col-md-4 col-12">
                       <div className="position-relative">
                          <FaFilter className="position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary z-1" style={{fontSize: '0.8rem'}} />
@@ -435,8 +433,8 @@ export default function PagGL() {
 
                   </div>
                 </div>
-                {/* ------------------------------------------- */}
 
+                {/* USA 'itensFiltrados' que agora depende do 'buscaDebounced' */}
                 {itensFiltrados.length === 0 ? (
                   <div className="text-center py-5 text-muted">
                     {busca || filtroMarca ? "Nenhum equipamento encontrado com esses filtros." : "Não há equipamentos disponíveis no momento."}
@@ -456,11 +454,7 @@ export default function PagGL() {
                           <div className="card-body p-3 flex-grow-1 d-flex flex-column justify-content-between">
                             <div>
                               <h5 className="card-title mb-1">{eq.nome}</h5>
-                              
-                              {/* VOLTEI EXATAMENTE COMO ERA O SEU CÓDIGO ORIGINAL */}
-                              {/* Se o banco tem a marca em categoria, vai aparecer aqui. Se tem em marca, você pode trocar eq.categoria por eq.marca */}
                               <p className="text-muted small mb-0">{eq.categoria || eq.marca}</p>
-
                             </div>
                             <button
                               className="btn btn-primary-solid w-100 mt-3 d-flex align-items-center justify-content-center gap-2"
@@ -477,7 +471,7 @@ export default function PagGL() {
               </div>
             )}
 
-            {/* ABA MEUS EMPRÉSTIMOS */}
+            {/* ABAS RESTANTES MANTIDAS IGUAIS */}
             {abaAtiva === "meus" && (
               <div className="col-12">
                 {meusEmprestimos.length === 0 ? (
@@ -507,7 +501,6 @@ export default function PagGL() {
               </div>
             )}
 
-            {/* ABA MINHAS SOLICITAÇÕES */}
             {abaAtiva === "solicitacoes" && (
               <div className="col-12">
                 <div className="row g-3">
