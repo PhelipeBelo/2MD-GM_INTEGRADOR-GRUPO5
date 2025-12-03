@@ -350,3 +350,39 @@
 .text-none{
   text-decoration: none;
 }
+
+/* Remove o outline azul padrão do input de busca para manter o design clean */
+.form-control:focus {
+  box-shadow: none;
+  border-color: #dee2e6; /* Ou a cor que preferir */
+  background-color: #ffffff !important;
+}
+
+/* Transição suave no input */
+input[type="text"] {
+  transition: all 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+  background-color: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Select do filtro */
+.form-select {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.form-select:focus {
+  box-shadow: none;
+  border-color: #dee2e6;
+  background-color: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Garante que o ícone de seta do select não sobreponha o texto se for muito longo */
+.form-select {
+  padding-right: 2.5rem; 
+  text-overflow: ellipsis;
+}
